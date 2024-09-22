@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 exports.fetchGym = async (req, res) => {
   try {
     console.log("Request Headers received", req.headers);
-    const token = req.headers['login_id']; // Read the JWT token from headers
+    const token = req.headers['auth']; // Read the JWT token from headers
 
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });

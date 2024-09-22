@@ -74,7 +74,7 @@ const upload = multer({ storage });
 
 // Middleware to verify JWT and extract gymId
 const verifyJWT = (req, res, next) => {
-  const token = req.headers['login_id'];
+  const token = req.headers['auth'];
   if (!token) return res.status(401).json({ error: 'No token provided' });
 
   jwt.verify(token, JWT_SECRET, (err, decoded) => {

@@ -6,7 +6,7 @@ exports.updateEquipment = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, quantity } = req.body;
-        const token = req.headers['login_id']; // Get JWT token from headers
+        const token = req.headers['auth']; // Get JWT token from headers
     
         if (!token) {
           return res.status(401).json({ error: 'No token provided' });

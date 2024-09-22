@@ -21,7 +21,7 @@ const validateUpdateInput = (body) => {
 
 exports.updateGymDetails = async (req, res) => {
   try {
-    const token = req.headers['login_id']; // Read the JWT token from headers
+    const token = req.headers['auth']; // Read the JWT token from headers
 
     if (!token) {
       return res.status(401).json({ error: 'No token provided' });

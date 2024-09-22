@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 exports.modifySubscription = async (req, res) => {
     try {
         
-        const token = req.headers['login_id']; // Get JWT token from headers
+        const token = req.headers['auth']; // Get JWT token from headers
     
         if (!token) {
           return res.status(401).json({ error: 'No token provided' });

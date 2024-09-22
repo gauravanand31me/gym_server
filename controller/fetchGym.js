@@ -7,6 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 // Fetch all information about a single gym
 exports.fetchGym = async (req, res) => {
   try {
+    console.log("Request Headers received", req.headers);
     const token = req.headers['login_id']; // Read the JWT token from headers
 
     if (!token) {

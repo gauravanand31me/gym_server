@@ -1,8 +1,8 @@
 // config.js
 module.exports = {
     development: {
-      username: process.env.DB_USERNAME || 'fitzoo',
-      password: process.env.DB_PASSWORD || 'Sourav@1992',
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DATABAASE_PASSWORD || 'Sourav@1992',
       database: process.env.DB_DATABASE || 'fitzoos',
       host: process.env.DB_HOST || 'localhost',
       port: process.env.DB_PORT || '5432',

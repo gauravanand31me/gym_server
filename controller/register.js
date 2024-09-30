@@ -1,24 +1,36 @@
-const bcrypt = require('bcrypt');
-const { Gym, Equipment, Slot, Subscription } = require('../models');
-const { v4: uuidv4 } = require('uuid');
+const bcrypt = require("bcrypt");
+const { Gym, Equipment, Slot, Subscription, GymImage } = require("../models");
+const { v4: uuidv4 } = require("uuid");
 
 // Helper function to validate input
 const validateInput = (req) => {
-  const { 
-    email, password, name, description, addressLine1, city, state, country, pinCode, equipmentDetails, slotDetails, subscriptionPricing 
+  const {
+    email,
+    password,
+    name,
+    description,
+    addressLine1,
+    city,
+    state,
+    country,
+    pinCode,
+    equipmentDetails,
+    slotDetails,
+    subscriptionPricing,
   } = req.body;
 
   let errors = [];
 
-  if (!email || !email.includes('@')) errors.push('A valid email is required');
-  if (!password || password.length < 6) errors.push('Password must be at least 6 characters long');
-  if (!name) errors.push('Gym name is required');
-  if (!description) errors.push('Gym description is required');
-  if (!addressLine1) errors.push('Address Line 1 is required');
-  if (!city) errors.push('City is required');
-  if (!state) errors.push('State is required');
-  if (!country) errors.push('Country is required');
-  if (!pinCode) errors.push('Pin code is required');
+  if (!email || !email.includes("@")) errors.push("A valid email is required");
+  if (!password || password.length < 6)
+    errors.push("Password must be at least 6 characters long");
+  if (!name) errors.push("Gym name is required");
+  if (!description) errors.push("Gym description is required");
+  if (!addressLine1) errors.push("Address Line 1 is required");
+  if (!city) errors.push("City is required");
+  if (!state) errors.push("State is required");
+  if (!country) errors.push("Country is required");
+  if (!pinCode) errors.push("Pin code is required");
 
   // if (equipmentDetails && equipmentDetails.length > 0) {
   //   equipmentDetails.forEach((item, index) => {
@@ -51,24 +63,34 @@ exports.registerGym = async (req, res) => {
       return res.status(400).json({ errors });
     }
 
-    const { 
-      email, password, name, description, addressLine1, addressLine2, pinCode, city, state, country, latitude, longitude,
-      equipmentDetails, slotDetails, subscriptionPricing 
+    const {
+      email,
+      password,
+      name,
+      description,
+      addressLine1,
+      addressLine2,
+      pinCode,
+      city,
+      state,
+      country,
+      latitude,
+      longitude,
+      equipmentDetails,
+      slotDetails,
+      subscriptionPricing,
     } = req.body;
 
     console.log("Register Password", password);
 
-   
     // Check if gym with this email already exists
     const existingGym = await Gym.findOne({ where: { email } });
     if (existingGym) {
-      return res.status(409).json({ error: 'Gym with this email already exists' });
+      return res
+        .status(409)
+        .json({ error: "Gym with this email already exists" });
     }
 
- 
-  
-
-    
     // Create Gym entry
     const gym = await Gym.create({
       email,
@@ -82,9 +104,15 @@ exports.registerGym = async (req, res) => {
       state,
       country,
       latitude,
-      longitude
+      longitude,
     });
 
+    await GymImage.create({
+      id: uuidv4(),
+      imageUrl:
+        "https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png",
+      gymId: gym.id,
+    });
     // // Add Equipment details
     // if (equipmentDetails && equipmentDetails.length > 0) {
     //   for (const equipment of equipmentDetails) {
@@ -119,12 +147,16 @@ exports.registerGym = async (req, res) => {
     //   gymId: gym.id
     // });
 
-    return res.status(201).json({ message: 'Gym registered successfully', gym });
+    return res
+      .status(201)
+      .json({ message: "Gym registered successfully", gym });
   } catch (error) {
     console.error(error);
-    if (error.name === 'SequelizeValidationError') {
-      return res.status(400).json({ error: error.errors.map(e => e.message) });
+    if (error.name === "SequelizeValidationError") {
+      return res
+        .status(400)
+        .json({ error: error.errors.map((e) => e.message) });
     }
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };

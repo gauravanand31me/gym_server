@@ -1,7 +1,7 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 module.exports = (sequelize, DataTypes) => {
-  const Gym = sequelize.define('Gym', {
+  const Gym = sequelize.define("Gym", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -20,6 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     description: DataTypes.TEXT,
+    rating: {
+      type: DataTypes.STRING,
+      defaultValue: "0",
+    },
+    total_rating: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     addressLine1: DataTypes.STRING,
     addressLine2: DataTypes.STRING,
     city: DataTypes.STRING,
@@ -37,17 +45,20 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Gym.beforeUpdate(async (gym) => {
-    if (gym.changed('password')) {
+    if (gym.changed("password")) {
       const salt = await bcrypt.genSalt(10);
       gym.password = await bcrypt.hash(gym.password, salt);
     }
   });
 
   Gym.associate = (models) => {
-    Gym.hasMany(models.GymImage, { foreignKey: 'gymId', onDelete: 'CASCADE' });
-    Gym.hasMany(models.Equipment, { foreignKey: 'gymId', onDelete: 'CASCADE' });
-    Gym.hasMany(models.Slot, { foreignKey: 'gymId', onDelete: 'CASCADE' });
-    Gym.hasOne(models.Subscription, { foreignKey: 'gymId', onDelete: 'CASCADE' });
+    Gym.hasMany(models.GymImage, { foreignKey: "gymId", onDelete: "CASCADE" });
+    Gym.hasMany(models.Equipment, { foreignKey: "gymId", onDelete: "CASCADE" });
+    Gym.hasMany(models.Slot, { foreignKey: "gymId", onDelete: "CASCADE" });
+    Gym.hasOne(models.Subscription, {
+      foreignKey: "gymId",
+      onDelete: "CASCADE",
+    });
   };
 
   return Gym;

@@ -20,6 +20,7 @@ const { deleteSlot } = require('../controller/deleteSlot');
 const { getSubscription } = require('../controller/getSubscription');
 const { modifySubscription } = require('../controller/modifySubscription');
 const { getAllEquipmentList } = require('../controller/getAllEquipmentList');
+const upload = require('../middleware/upload');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -62,17 +63,7 @@ router.post('/auth/verify-token', (req, res) => {
 })
 
 
-// Set up multer for image upload
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
 
-const upload = multer({ storage });
 
 // Middleware to verify JWT and extract gymId
 const verifyJWT = (req, res, next) => {
@@ -87,28 +78,31 @@ const verifyJWT = (req, res, next) => {
 };
 
 // API to upload multiple images for a gym
-router.post('/gym-images', verifyJWT, upload.array('images'), async (req, res) => {
-    try {
-        const { gymId } = req;
-        const baseUrl = 'https://yupluck.com'; // Replace with your base URL if different
-        const imageUrls = req.files.map((file) => `${baseUrl}/uploads/${file.filename}`);
+router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, res) => { 
+  // Accept up to 10 images; adjust the limit as needed
+  try {
+    const { gymId } = req;
     
-        // Ensure gym exists
-        const gym = await Gym.findByPk(gymId);
-        if (!gym) return res.status(404).json({ error: 'Gym not found' });
-    
-        // Save full image URLs to the database
-        const imagePromises = imageUrls.map((url) => 
-          GymImage.create({ id: uuidv4(), imageUrl: url, gymId })
-        );
-        await Promise.all(imagePromises);
-    
-        res.status(201).json({ message: 'Images uploaded successfully', imageUrls });
-      } catch (error) {
-        console.error('Error uploading images:', error);
-        res.status(500).json({ error: 'Internal server error' });
-      }
+    // Ensure gym exists
+    const gym = await Gym.findByPk(gymId);
+    if (!gym) return res.status(404).json({ error: 'Gym not found' });
+
+    // Get the image URLs from the uploaded files
+    const imageUrls = req.files.map(file => file.location); // Assuming `file.location` contains the URL of the uploaded image
+
+    // Save each image URL to the database
+    const imagePromises = imageUrls.map(url =>
+      GymImage.create({ id: uuidv4(), imageUrl: url, gymId })
+    );
+    await Promise.all(imagePromises);
+
+    res.status(201).json({ message: 'Images uploaded successfully', imageUrls });
+  } catch (error) {
+    console.log('Error uploading images:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
 
 // API to get images for a specific gym
 router.get('/gym-images', verifyJWT, async (req, res) => {

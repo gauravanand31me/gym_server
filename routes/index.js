@@ -90,7 +90,7 @@ const verifyJWT = (req, res, next) => {
 router.post('/gym-images', verifyJWT, upload.array('images'), async (req, res) => {
     try {
         const { gymId } = req;
-        const baseUrl = 'http://localhost:9000'; // Replace with your base URL if different
+        const baseUrl = 'https://yupluck.com'; // Replace with your base URL if different
         const imageUrls = req.files.map((file) => `${baseUrl}/uploads/${file.filename}`);
     
         // Ensure gym exists

@@ -21,6 +21,7 @@ const { getSubscription } = require('../controller/getSubscription');
 const { modifySubscription } = require('../controller/modifySubscription');
 const { getAllEquipmentList } = require('../controller/getAllEquipmentList');
 const upload = require('../middleware/upload');
+const { getAllBookingsToGym } = require('../controller/getAllBookingGym');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -36,7 +37,7 @@ router.delete('/slots/:id', deleteSlot);
 router.get('/subscriptions', getSubscription);
 router.put('/subscriptions', modifySubscription);
 router.get('/equipments/list', getAllEquipmentList);
-
+router.get('/booking', getAllBookingsToGym);
 
 
 

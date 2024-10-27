@@ -20,7 +20,7 @@ exports.getAllBookingsToGym = async (req, res) => {
 
         const gymId = decoded.id;
   
-      const query = 'SELECT \n' +
+        const query = 'SELECT \n' +
         '    "Booking"."bookingId" AS "id",\n' +
         '    "Booking"."stringBookingId" AS "bookingId",\n' +
         '    "Booking"."userId" AS "userId",\n' +
@@ -32,15 +32,18 @@ exports.getAllBookingsToGym = async (req, res) => {
         '    "Slots"."startTime" AS "slotStartTime",\n' +
         '    "Booking".price AS "subscriptionPrice",\n' +
         '    "Booking"."createdAt" AS "create",\n' +
-        '    COUNT("BuddyRequests".id) AS "invitedBuddyCount"  -- Count of buddies invited\n' +
+        '    COUNT("BuddyRequests".id) AS "invitedBuddyCount",\n' + // Count of buddies invited\n
+        '    "User"."full_name" AS "fullName"  -- Full name of the user\n' +
         'FROM "Booking"\n' +
         'JOIN "Slots" ON "Booking"."slotId" = "Slots".id\n' +
         'JOIN "Gyms" ON "Slots"."gymId" = "Gyms".id\n' +
         'JOIN "Subscriptions" ON "Slots"."gymId" = "Subscriptions"."gymId" \n' +
         'LEFT JOIN "BuddyRequests" ON "Booking"."bookingId" = "BuddyRequests"."bookingId"  -- Left join to BuddyRequests\n' +
+        'JOIN "User" ON "Booking"."userId" = "User".id  -- Join with User table to get full name\n' +
         `WHERE "Gyms"."id" = '${gymId}'\n` +
-        'GROUP BY "Booking"."bookingId", "Booking"."userId", "Booking"."bookingDate", "Gyms".id, "Gyms".name, "Gyms".rating, "Slots"."startTime", "Subscriptions".daily\n' +  // Corrected here
+        'GROUP BY "Booking"."bookingId", "Booking"."userId", "Booking"."bookingDate", "Gyms".id, "Gyms".name, "Gyms".rating, "Slots"."startTime", "Subscriptions".daily, "User"."full_name\n' +  // Added User.full_name to GROUP BY
         'ORDER BY "Booking"."bookingDate" DESC; -- Order by booking date';
+    
   
       // Execute the booking query
       const [results] = await sequelize.query(query, {

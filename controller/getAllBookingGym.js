@@ -44,7 +44,7 @@ exports.getAllBookingsToGym = async (req, res) => {
   
       // Execute the booking query
       const [results] = await sequelize.query(query, {
-        replacements: { userId: userId },
+        replacements: { gymId: gymId },
       });
   
       res.status(200).json({ Booking: results });

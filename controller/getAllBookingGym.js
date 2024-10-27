@@ -36,6 +36,7 @@ exports.getAllBookingsToGym = async (req, res) => {
         '    COUNT("BuddyRequests".id) AS "invitedBuddyCount"  -- Count of buddies invited\n' +
         'FROM "Booking"\n' +
         'JOIN "Slots" ON "Booking"."slotId" = "Slots".id\n' +
+        'JOIN "Slots" ON "Users"."id" = "Booking"."userId"\n' +
         'JOIN "Gyms" ON "Slots"."gymId" = "Gyms".id\n' +
         'JOIN "Subscriptions" ON "Slots"."gymId" = "Subscriptions"."gymId" \n' +
         'LEFT JOIN "BuddyRequests" ON "Booking"."bookingId" = "BuddyRequests"."bookingId"  -- Left join to BuddyRequests\n' +

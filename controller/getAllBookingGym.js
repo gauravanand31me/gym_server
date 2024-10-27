@@ -41,7 +41,7 @@ exports.getAllBookingsToGym = async (req, res) => {
         'JOIN "Subscriptions" ON "Slots"."gymId" = "Subscriptions"."gymId" \n' +
         'LEFT JOIN "BuddyRequests" ON "Booking"."bookingId" = "BuddyRequests"."bookingId"  -- Left join to BuddyRequests\n' +
         `WHERE "Gyms"."id" = '${gymId}'\n` +
-        'GROUP BY "Booking"."bookingId", "Booking"."userId", "Booking"."bookingDate", "Gyms".id, "Gyms".name, "Users.full_name", "Gyms".rating, "Slots"."startTime", "Subscriptions".daily\n' +  // Corrected here
+        'GROUP BY "Booking"."bookingId", "Booking"."userId", "Booking"."bookingDate", "Gyms".id, "Gyms".name, "Users".full_name, "Gyms".rating, "Slots"."startTime", "Subscriptions".daily\n' +  // Corrected here
         'ORDER BY "Booking"."bookingDate" DESC; -- Order by booking date';
   
       // Execute the booking query

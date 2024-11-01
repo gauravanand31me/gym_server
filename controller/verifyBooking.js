@@ -21,7 +21,7 @@ console.log("Decoded Value received", decoded);
 
     // Step 1: Fetch the booking details by bookingId using raw SQL
     const [booking] = await sequelize.query(
-      'SELECT * FROM Bookings WHERE "stringBookingId" = :bookingId AND "gymId" = :gymId',
+      'SELECT * FROM "Booking" WHERE "stringBookingId" = :bookingId AND "gymId" = :gymId',
       {
         replacements: { bookingId, gymId: decoded.id  },
         type: sequelize.QueryTypes.SELECT,
@@ -29,7 +29,13 @@ console.log("Decoded Value received", decoded);
     );
 
     if (!booking) {
+        console.log("Not found");
       return res.status(404).json({ message: 'Booking not found For this gym' });
+    }
+
+    if (booking.isCheckedIn) {
+        console.log("Already came");
+        return res.status(400).json({ message: 'Booking has already been checked in' });
     }
 
     // Step 2: Check if the booking date matches the current date
@@ -42,7 +48,7 @@ console.log("Decoded Value received", decoded);
 
     // Step 3: Fetch the user using their ID from the booking
     const [user] = await sequelize.query(
-      'SELECT * FROM Users WHERE id = :userId',
+      'SELECT * FROM "Users" WHERE id = :userId',
       {
         replacements: { userId: booking.userId },
         type: sequelize.QueryTypes.SELECT,
@@ -50,6 +56,7 @@ console.log("Decoded Value received", decoded);
     );
 
     if (!user) {
+        console.log("No User");
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -70,7 +77,7 @@ console.log("Decoded Value received", decoded);
 
     // Step 5: Set isCheckedIn to true for this booking
     await sequelize.query(
-      'UPDATE Bookings SET isCheckedIn = true WHERE stringBookingId = :bookingId',
+      'UPDATE "Booking" SET "isCheckedIn" = true WHERE "stringBookingId" = :bookingId',
       {
         replacements: { bookingId },
         type: sequelize.QueryTypes.UPDATE,

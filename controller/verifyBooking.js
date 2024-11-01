@@ -65,7 +65,7 @@ console.log("Decoded Value received", decoded);
 
     // Step 4: Update the user's workout hours
     await sequelize.query(
-      'UPDATE Users SET total_work_out_time = :totalWorkoutTime WHERE id = :userId',
+      'UPDATE "Users" SET total_work_out_time = :totalWorkoutTime WHERE id = :userId',
       {
         replacements: {
           totalWorkoutTime: newTotalWorkoutTime,

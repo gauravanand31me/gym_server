@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const {sequelize} = require("../models/index");
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
-
+const moment = require("moment");
 exports.verifyBooking = async (req, res) => {
     const token = req.headers['auth']; // Get JWT token from headers
     if (!token) {

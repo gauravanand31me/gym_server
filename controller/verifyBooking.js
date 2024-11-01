@@ -21,9 +21,9 @@ console.log("Decoded Value received", decoded);
 
     // Step 1: Fetch the booking details by bookingId using raw SQL
     const [booking] = await sequelize.query(
-      'SELECT * FROM Bookings WHERE "stringBookingId" = :bookingId AND "gymId" = :decoded.id',
+      'SELECT * FROM Bookings WHERE "stringBookingId" = :bookingId AND "gymId" = :gymId',
       {
-        replacements: { bookingId },
+        replacements: { bookingId, gymId: decoded.id  },
         type: sequelize.QueryTypes.SELECT,
       }
     );

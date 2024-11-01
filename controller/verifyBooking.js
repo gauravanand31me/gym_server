@@ -1,6 +1,6 @@
 
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-const { Gym, GymImage, Equipment, Slot, Subscription } = require('../models');
+const {sequelize} = require("../models/index");
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
 exports.verifyBooking = async (req, res) => {

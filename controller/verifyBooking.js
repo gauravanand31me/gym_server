@@ -14,7 +14,7 @@ exports.verifyBooking = async (req, res) => {
     }
 
 
-
+console.log("Decoded Value received", decoded);
 
   try {
     const { bookingId } = req.query;

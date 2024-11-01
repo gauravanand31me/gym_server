@@ -30,8 +30,10 @@ exports.getAllBookingsToGym = async (req, res) => {
         '    "Gyms".name AS "gymName",\n' +
         '    "Gyms".rating AS "gymRating",\n' +
         '    "Users".full_name AS "userFullName",\n' +
+        '    "Users".mobile_number AS "userMobileNumber",\n' +
         '    "Slots"."startTime" AS "slotStartTime",\n' +
         '    "Booking".price AS "subscriptionPrice",\n' +
+        '    "Booking"."isPaid" AS "isPaid",\n' +
         '    "Booking"."createdAt" AS "create",\n' +
         '    COUNT("BuddyRequests".id) AS "invitedBuddyCount"  -- Count of buddies invited\n' +
         'FROM "Booking"\n' +
@@ -41,7 +43,7 @@ exports.getAllBookingsToGym = async (req, res) => {
         'JOIN "Subscriptions" ON "Slots"."gymId" = "Subscriptions"."gymId" \n' +
         'LEFT JOIN "BuddyRequests" ON "Booking"."bookingId" = "BuddyRequests"."bookingId"  -- Left join to BuddyRequests\n' +
         `WHERE "Gyms"."id" = '${gymId}'\n` +
-        'GROUP BY "Booking"."bookingId", "Booking"."userId", "Booking"."bookingDate", "Gyms".id, "Gyms".name, "Users".full_name, "Gyms".rating, "Slots"."startTime", "Subscriptions".daily\n' +  // Corrected here
+        'GROUP BY "Booking"."bookingId", "Booking"."userId", "Booking"."bookingDate", "Booking"."isPaid", "Gyms".id, "Gyms".name, "Users".full_name, "Users".mobile_number, "Gyms".rating, "Slots"."startTime", "Subscriptions".daily\n' +  // Corrected here
         'ORDER BY "Booking"."bookingDate" DESC; -- Order by booking date';
   
       // Execute the booking query

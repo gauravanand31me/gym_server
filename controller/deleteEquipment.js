@@ -25,6 +25,13 @@ exports.deleteEquipment = async (req, res) => {
         }
     
         await equipment.destroy();
+
+        const remainingEquipment = await Equipment.findAll({ where: { gymId } });
+        if (remainingEquipment.length === 0 && gym.complete > 10) {
+            // Reduce `complete` by 10 only if there are no remaining equipment items
+            const updatedComplete = Math.max(gym.complete - 10, 0); // Ensure `complete` does not go below 0
+            await gym.update({ complete: updatedComplete });
+        }
     
         res.json({ message: 'Equipment deleted successfully' });
       } catch (error) {

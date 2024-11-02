@@ -1,5 +1,5 @@
 // config.js
-console.log("process.env.DB_DATABASE", process.env.DB_DATABASE);
+console.log("process.env.DB_DATABASE", process.env);
 module.exports = {
     development: {
       username: process.env.DB_USERNAME || 'fitzoo',

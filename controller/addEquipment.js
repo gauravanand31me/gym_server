@@ -33,6 +33,15 @@ exports.addEquipment = async (req, res) => {
             return res.status(404).json({ error: 'Gym not found' });
         }
 
+
+        const existingEquipment = await Equipment.findOne({ where: { gymId } });
+
+        if (!existingEquipment && gym.complete < 100) {
+            // Increment complete by 10% only for the first equipment
+            const updatedComplete = Math.min(gym.complete + 10, 100);
+            await gym.update({ complete: updatedComplete });
+        }
+
         // Create new equipment entry
         await Equipment.create({
             id: uuidv4(),

@@ -34,21 +34,6 @@ exports.getEquipment = async (req, res) => {
         const equipmentList = await Equipment.findAll({ where: { gymId } });
 
         // Check if equipment list is empty or not and update completion
-        let updatedComplete = gym.complete;
-
-        if (equipmentList.length > 0 && updatedComplete < 100) {
-            // Increment by 10% if there is equipment and completion is not already at 100%
-            updatedComplete = Math.min(updatedComplete + 10, 100);
-        } else if (equipmentList.length === 0 && updatedComplete > 10) {
-            // Decrement by 10% if no equipment and completion is above 10%
-            updatedComplete = updatedComplete - 10;
-        }
-
-        // Only update if completion value changed
-        if (updatedComplete !== gym.complete) {
-            await gym.update({ complete: updatedComplete });
-        }
-
         res.json(equipmentList);
     } catch (error) {
         console.error('Error fetching equipment:', error);

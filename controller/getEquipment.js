@@ -33,6 +33,12 @@ exports.getEquipment = async (req, res) => {
         // Fetch all equipment for the gym
         const equipmentList = await Equipment.findAll({ where: { gymId } });
 
+        
+          // Increment complete by 10% only for the first equipment
+         
+          await gym.update({ complete: 10 });
+
+
         // Check if equipment list is empty or not and update completion
         res.json(equipmentList);
     } catch (error) {

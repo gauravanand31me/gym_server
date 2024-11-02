@@ -36,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
     pinCode: DataTypes.STRING,
     latitude: DataTypes.DOUBLE,
     longitude: DataTypes.DOUBLE,
+    verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    complete: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   });
 
   // Hash password before creating or updating a gym

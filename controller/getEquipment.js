@@ -36,9 +36,6 @@ exports.getEquipment = async (req, res) => {
         
           // Increment complete by 10% only for the first equipment
          
-          await gym.update({ complete: 10 });
-
-
         // Check if equipment list is empty or not and update completion
         res.json(equipmentList);
     } catch (error) {

@@ -105,6 +105,8 @@ exports.registerGym = async (req, res) => {
       country,
       latitude,
       longitude,
+      verified: false,
+      complete: 10
     });
 
     await GymImage.create({
@@ -113,39 +115,8 @@ exports.registerGym = async (req, res) => {
         "https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-15.png",
       gymId: gym.id,
     });
-    // // Add Equipment details
-    // if (equipmentDetails && equipmentDetails.length > 0) {
-    //   for (const equipment of equipmentDetails) {
-    //     await Equipment.create({
-    //       id: uuidv4(),
-    //       name: equipment.name,
-    //       quantity: equipment.quantity,
-    //       gymId: gym.id
-    //     });
-    //   }
-    // }
 
-    // // Add Slot details
-    // if (slotDetails && slotDetails.length > 0) {
-    //   for (const slot of slotDetails) {
-    //     await Slot.create({
-    //       id: uuidv4(),
-    //       capacity: slot.capacity,
-    //       timePeriod: slot.timePeriod,
-    //       price: subscriptionPricing.dailyPrice, // Set price to dailyPrice
-    //       gymId: gym.id
-    //     });
-    //   }
-    // }
 
-    // // Add Subscription Pricing
-    // await Subscription.create({
-    //   id: uuidv4(),
-    //   dailyPrice: subscriptionPricing.dailyPrice,
-    //   monthlyPrice: subscriptionPricing.monthlyPrice,
-    //   yearlyPrice: subscriptionPricing.yearlyPrice,
-    //   gymId: gym.id
-    // });
 
     return res
       .status(201)

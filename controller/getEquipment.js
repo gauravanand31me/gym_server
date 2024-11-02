@@ -49,9 +49,7 @@ exports.getEquipment = async (req, res) => {
             await gym.update({ complete: updatedComplete });
         }
 
-        res.json({
-            equipmentList
-        });
+        res.json(equipmentList);
     } catch (error) {
         console.error('Error fetching equipment:', error);
         res.status(500).json({ error: 'Internal server error' });

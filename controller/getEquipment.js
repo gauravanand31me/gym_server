@@ -50,8 +50,7 @@ exports.getEquipment = async (req, res) => {
         }
 
         res.json({
-            equipmentList,
-            gymCompletion: updatedComplete
+            equipmentList
         });
     } catch (error) {
         console.error('Error fetching equipment:', error);

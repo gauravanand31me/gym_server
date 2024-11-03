@@ -1,5 +1,6 @@
 // models/bankaccount.js
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const BankAccount = sequelize.define('BankAccount', {
     gymId: {
@@ -13,23 +14,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     bankAccountName: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 'N/A' // Set default value to "N/A"
     },
     bankAccountNumber: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 'N/A' // Set default value to "N/A"
     },
     bankIFSC: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 'N/A' // Set default value to "N/A"
     },
     bankName: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 'N/A' // Set default value to "N/A"
     },
     bankBranch: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 'N/A' // Set default value to "N/A"
     }
   }, {
     tableName: 'BankAccount',  // Specify the table name explicitly

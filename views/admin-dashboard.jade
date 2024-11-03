@@ -12,17 +12,17 @@ html
       p Complete: #{gym.complete}%
       
       h3 Images
-      each image in gym.images
+      each image in gym.GymImages
         img(src=image.url, alt="Gym Image", width="100")
 
       h3 Equipment
-      each equip in gym.equipment
+      each equip in gym.Equipment
         p= equip.name
 
       h3 Slots
-      each slot in gym.slots
+      each slot in gym.Slots
         p= slot.startTime + " - " + slot.endTime
 
       h3 Subscriptions
-      each subscription in gym.subscriptions
+      each subscription in gym.Subscription
         p= subscription.type + ": $" + subscription.price

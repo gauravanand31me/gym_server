@@ -6,6 +6,7 @@ var logger = require('morgan');
 const cors = require("cors");
 const routes = require('./routes/index.js');
 require('dotenv').config();
+require("./config/transporter.js");
 
 const PORT = process.env.PORT || 9000;
 var app = express();

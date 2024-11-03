@@ -32,6 +32,13 @@ exports.addSlot = async (req, res) => {
             return res.status(404).json({ error: 'Gym not found' });
         }
 
+        const existingSlot = await Slot.findOne({ where: { gymId } });
+
+        // If no equipment exists, update gym.complete by adding 10
+        if (!existingSlot) {
+            await Gym.increment('complete', { by: 10, where: { id: gymId } });
+        }
+
         // Create new slot entry
         await Slot.create({
             id: uuidv4(),

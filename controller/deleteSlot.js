@@ -25,6 +25,13 @@ exports.deleteSlot = async (req, res) => {
         }
     
         await slot.destroy();
+
+        const existingSlot = await Slot.findOne({ where: { gymId: decoded.id} });
+
+        // If no equipment exists, update gym.complete by adding 10
+        if (!existingSlot) {
+            await Gym.increment('complete', { by: 10, where: { id: decoded.id } });
+        }
     
         res.json({ message: 'Slot deleted successfully' });
       } catch (error) {

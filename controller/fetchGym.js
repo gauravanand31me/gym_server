@@ -39,24 +39,24 @@ exports.fetchGym = async (req, res) => {
     ]);
 
 
-    if (!equipment && gym.complete < 100) {
+    if (equipment && gym.complete < 100) {
       // Increment complete by 10% only for the first equipment
       const updatedComplete = Math.min(gym.complete + 10, 100);
       await gym.update({ complete: updatedComplete });
     }
 
 
-    if (!slots && gym.complete < 100) {
+    if (slots && gym.complete < 100) {
       // Increment complete by 10% only for the first equipment
         await gym.update({ complete: Math.min(gym.complete + 10, 100) });
     }
 
-    if (!subscriptions && gym.complete < 100) {
+    if (subscriptions && gym.complete < 100) {
       // Increment complete by 10% only for the first equipment
         await gym.update({ complete: Math.min(gym.complete + 10, 100) });
     }
 
-    if (!images && gym.complete < 100) {
+    if (images && gym.complete < 100) {
       // Increment complete by 10% only for the first equipment
         await gym.update({ complete: Math.min(gym.complete + 10, 100) });
     }

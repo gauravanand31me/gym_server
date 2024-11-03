@@ -72,7 +72,7 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
 });
 
 // Approve gym
-router.post('/admin/approve/:gymId', requireAdminSession, async (req, res) => {
+router.post('/admin/approve/:gymId', requireAdmin, async (req, res) => {
   try {
     const { gymId } = req.params;
     const gym = await Gym.findByPk(gymId);
@@ -82,7 +82,7 @@ router.post('/admin/approve/:gymId', requireAdminSession, async (req, res) => {
     }
 
     // Set the gym's approval status to true
-    await gym.update({ isApproved: true });
+    await gym.update({ verified: true });
     res.redirect('/admin/dashboard'); // Redirect back to the dashboard
   } catch (error) {
     console.error('Error approving gym:', error);
@@ -91,7 +91,7 @@ router.post('/admin/approve/:gymId', requireAdminSession, async (req, res) => {
 });
 
 // Disapprove gym
-router.post('/admin/disapprove/:gymId', requireAdminSession, async (req, res) => {
+router.post('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
   try {
     const { gymId } = req.params;
     const gym = await Gym.findByPk(gymId);
@@ -101,7 +101,7 @@ router.post('/admin/disapprove/:gymId', requireAdminSession, async (req, res) =>
     }
 
     // Set the gym's approval status to false
-    await gym.update({ isApproved: false });
+    await gym.update({ verified: false });
     res.redirect('/admin/dashboard'); // Redirect back to the dashboard
   } catch (error) {
     console.error('Error disapproving gym:', error);

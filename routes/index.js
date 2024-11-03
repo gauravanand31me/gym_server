@@ -47,6 +47,13 @@ router.get('/banking/get', BankAccountController.getBankAccount);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
+const requireAdmin = (req, res, next) => {
+  if (req.session.isAdmin) {
+    next(); // User is authenticated, proceed to the next handler
+  } else {
+    res.status(403).json({ message: "Access denied" });
+  }
+};
 
 
 router.get("/admin", (req, res) => {
@@ -54,7 +61,7 @@ router.get("/admin", (req, res) => {
 });
 
 
-router.get("/admin/dashboard", (req, res) => {
+router.get("/admin/dashboard", requireAdmin, (req, res) => {
   res.json({status: true}); // Renders the 'admin-login' Jade template
 });
 
@@ -63,6 +70,8 @@ router.post("/admin/login", (req, res) => {
     const {username, password} = req.body;
 
     if (username === process.env.GODADDY_EMAIL && password === process.env.GODADDY_PASS) {
+
+      req.session.isAdmin = true;
       res.status(200).json({status: true});
     } else {
       res.status(400).json({status: false});

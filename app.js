@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require("cors");
+const session = require("express-session");
 const routes = require('./routes/index.js');
 require('dotenv').config();
 require("./config/transporter.js");
@@ -11,9 +12,19 @@ require("./config/transporter.js");
 const PORT = process.env.PORT || 9000;
 var app = express();
 
+
+
 app.listen(PORT, () => {
   console.log(`App is Listening PORT ${PORT}`);
 });
+
+
+app.use(session({
+  secret: 'TestSecretKey', // Use a strong secret in production
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to `true` if using HTTPS
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

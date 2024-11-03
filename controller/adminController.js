@@ -8,7 +8,7 @@ exports.adminDashboard = async (req, res) => {
       include: [
         { model: GymImage, as: 'GymImages' },  // Use the correct alias here
         { model: Equipment, as: 'Equipment' },
-        { model: Slot, as: 'Slot' },
+        { model: Slot, as: 'Slots' },
         { model: Subscription, as: 'Subscription' }
       ]
     });

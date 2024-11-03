@@ -98,4 +98,4 @@ exports.getBankAccount = async(req, res) => {
 }
 
 
-module.exports = BankAccountController;
+

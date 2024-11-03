@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { Gym, Equipment, Slot, Subscription, GymImage } = require("../models");
 const { v4: uuidv4 } = require("uuid");
+const { sendEmail } = require("../config/sendEmail");
 
 // Helper function to validate input
 const validateInput = (req) => {
@@ -116,7 +117,7 @@ exports.registerGym = async (req, res) => {
       gymId: gym.id,
     });
 
-
+    await sendEmail(email);
 
     return res
       .status(201)

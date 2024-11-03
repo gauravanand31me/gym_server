@@ -1,5 +1,5 @@
 // controllers/adminController.js
-const { Gym, GymImage, Equipment, Slot, Subscription } = require('../models');
+const { Gym, GymImage, Equipment, Slot, Subscriptions } = require('../models');
 
 exports.adminDashboard = async () => {
   try {
@@ -9,7 +9,7 @@ exports.adminDashboard = async () => {
         { model: GymImage, as: 'GymImages' },  // Use the correct alias here
         { model: Equipment, as: 'Equipment' },
         { model: Slot, as: 'Slots' },
-        { model: Subscription, as: 'Subscription' }
+        { model: Subscriptions, as: 'Subscription' }
       ]
     });
 

@@ -43,7 +43,7 @@ router.get('/booking', getAllBookingsToGym);
 router.get('/booking/verify', verifyBooking);
 router.post('/banking/add', BankAccountController.createBankAccount);
 router.put('/banking/update', BankAccountController.updateBankAccount);
-router.delete('/banking/get', BankAccountController.getBankAccount);
+router.get('/banking/get', BankAccountController.getBankAccount);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 

@@ -71,6 +71,43 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
   res.render("admin-dashboard", { gyms });
 });
 
+// Approve gym
+router.post('/admin/approve/:gymId', requireAdminSession, async (req, res) => {
+  try {
+    const { gymId } = req.params;
+    const gym = await Gym.findByPk(gymId);
+
+    if (!gym) {
+      return res.status(404).send('Gym not found');
+    }
+
+    // Set the gym's approval status to true
+    await gym.update({ isApproved: true });
+    res.redirect('/admin/dashboard'); // Redirect back to the dashboard
+  } catch (error) {
+    console.error('Error approving gym:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Disapprove gym
+router.post('/admin/disapprove/:gymId', requireAdminSession, async (req, res) => {
+  try {
+    const { gymId } = req.params;
+    const gym = await Gym.findByPk(gymId);
+
+    if (!gym) {
+      return res.status(404).send('Gym not found');
+    }
+
+    // Set the gym's approval status to false
+    await gym.update({ isApproved: false });
+    res.redirect('/admin/dashboard'); // Redirect back to the dashboard
+  } catch (error) {
+    console.error('Error disapproving gym:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 router.post("/admin/login", (req, res) => {
     const {username, password} = req.body;

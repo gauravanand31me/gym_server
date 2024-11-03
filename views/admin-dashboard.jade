@@ -37,10 +37,8 @@ html
       .no-content {
         color: #888;
       }
-      .approve-btn {
+      .action-btn {
         display: inline-block;
-        background-color: #4CAF50;
-        color: #fff;
         padding: 10px 15px;
         margin-top: 15px;
         border: none;
@@ -48,8 +46,19 @@ html
         text-decoration: none;
         cursor: pointer;
       }
+      .approve-btn {
+        background-color: #4CAF50;
+        color: #fff;
+      }
       .approve-btn:hover {
         background-color: #45a049;
+      }
+      .disapprove-btn {
+        background-color: #e74c3c;
+        color: #fff;
+      }
+      .disapprove-btn:hover {
+        background-color: #c0392b;
       }
   body
     h1 Admin Dashboard
@@ -80,7 +89,7 @@ html
         if gym.Slots && gym.Slots.length
           h3.section-title Slots
           each slot in gym.Slots
-            p= slot.startTime + " - " + slot.price
+            p= slot.startTime + " - " + slot.endTime
         else
           p.no-content No slots available
 
@@ -92,6 +101,10 @@ html
         else
           p.no-content No subscriptions available
 
-        // Approve Button
-        form(action=`/admin/approve/${gym.id}`, method="post")
-          button(type="submit", class="approve-btn") Approve Gym
+        // Approve/approve Button
+        if gym.verified
+          form(action=`/admin/disapprove/${gym.id}`, method="post")
+            button(type="submit", class="action-btn disapprove-btn") Disapprove
+        else
+          form(action=`/admin/approve/${gym.id}`, method="post")
+            button(type="submit", class="action-btn approve-btn") Approve

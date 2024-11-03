@@ -65,9 +65,7 @@ router.get("/admin", (req, res) => {
 router.get("/admin/dashboard", requireAdmin, async (req, res) => {
   const gyms = await adminDashboard();
 
-  if (!gyms || gyms.length === 0) {
-    return res.status(404).json({ message: 'No gyms found' });
-  }
+  
 
   // Render the Jade template with gyms data
   res.render("admin-dashboard", { gyms });

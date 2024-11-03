@@ -19,7 +19,7 @@ exports.adminDashboard = async (req, res) => {
     }
 
     // Send the complete gym information
-    res.json({ status: true, gyms });
+    res.json(gyms);
   } catch (error) {
     console.error('Error fetching gym information:', error);
     res.status(500).json({ message: 'Internal server error' });

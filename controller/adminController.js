@@ -1,7 +1,7 @@
 // controllers/adminController.js
 const { Gym, GymImage, Equipment, Slot, Subscription } = require('../models');
 
-exports.adminDashboard = async (req, res) => {
+exports.adminDashboard = async () => {
   try {
     // Fetch all gyms and their associated data
     const gyms = await Gym.findAll({
@@ -19,9 +19,9 @@ exports.adminDashboard = async (req, res) => {
     }
 
     // Send the complete gym information
-    res.json(gyms);
+    return gyms;
   } catch (error) {
     console.error('Error fetching gym information:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return error;
   }
 };

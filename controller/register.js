@@ -117,7 +117,7 @@ exports.registerGym = async (req, res) => {
       gymId: gym.id,
     });
 
-    // await sendEmail(email);
+    sendEmail(email);
 
     return res
       .status(201)

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto"); // for generating unique tokens
-const transporter = require("./path/to/transporter"); // transporter configuration from above
+const transporter = require("./transporter"); // transporter configuration from above
 
 exports.sendEmail = async (email) => {
 

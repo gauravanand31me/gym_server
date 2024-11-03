@@ -24,6 +24,7 @@ const upload = require('../middleware/upload');
 const { getAllBookingsToGym } = require('../controller/getAllBookingGym');
 const { verifyBooking } = require('../controller/verifyBooking');
 const BankAccountController = require('../controller/bankAccountController');
+const { adminDashboard } = require('../controller/adminController');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -61,8 +62,15 @@ router.get("/admin", (req, res) => {
 });
 
 
-router.get("/admin/dashboard", requireAdmin, (req, res) => {
-  res.json({status: true}); // Renders the 'admin-login' Jade template
+router.get("/admin/dashboard", requireAdmin, async (req, res) => {
+  const gyms = await adminDashboard();
+
+  if (!gyms || gyms.length === 0) {
+    return res.status(404).json({ message: 'No gyms found' });
+  }
+
+  // Render the Jade template with gyms data
+  res.render("admin-dashboard", { gyms });
 });
 
 

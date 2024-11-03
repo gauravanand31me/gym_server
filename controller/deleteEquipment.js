@@ -26,6 +26,14 @@ exports.deleteEquipment = async (req, res) => {
     
         await equipment.destroy();
 
+        // Check if equipment already exists for the gym
+        const existingEquipment = await Equipment.findOne({ where: { gymId: decoded.id } });
+
+        // If no equipment exists, update gym.complete by adding 10
+        if (!existingEquipment) {
+            await Gym.increment('complete', { by: -10, where: { id: decoded.id } });
+        }
+
     
         res.json({ message: 'Equipment deleted successfully' });
       } catch (error) {

@@ -53,6 +53,23 @@ router.get("/admin", (req, res) => {
   res.render("index"); // Renders the 'admin-login' Jade template
 });
 
+
+router.get("/admin/dashboard", (req, res) => {
+  res.json({status: true}); // Renders the 'admin-login' Jade template
+});
+
+
+router.post("/admin/login", (req, res) => {
+    const {username, password} = req.body;
+
+    if (username === process.env.GODADDY_EMAIL && password === process.env.GODADDY_PASS) {
+      res.status(200).json({status: true});
+    } else {
+      res.status(400).json({status: false});
+    }
+});
+
+
 router.post('/auth/verify-token', (req, res) => {
     const token = req.headers['authorization'];
     

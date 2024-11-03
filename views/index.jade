@@ -56,14 +56,14 @@ html
   body
     .login-container
       h1 Admin Login
-      form(id="loginForm" action="/admin/login" method="post")
+      form(id="loginForm" action="/gym/api/admin/login" method="post")
         div
           label(for="username") Username
           input(type="text" name="username" id="username" required)
         div
           label(for="password") Password
           input(type="password" name="password" id="password" required)
-        input(type="hidden" name="redirectUrl" value="/admin/dashboard")
+        input(type="hidden" name="redirectUrl" value="/gym/api/admin/dashboard")
         button(type="submit") Login
       div#message(style="color: red; margin-top: 1rem;")
 
@@ -76,7 +76,7 @@ html
         const redirectUrl = document.querySelector('input[name="redirectUrl"]').value;
 
         try {
-          const response = await axios.post('/admin/login', { username, password });
+          const response = await axios.post('/gym/api/admin/login', { username, password });
           if (response.status === 200) {
             window.location.href = redirectUrl; // Redirect on success
           }

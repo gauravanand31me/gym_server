@@ -14,6 +14,8 @@ service: 'Godaddy',
 
 // Verify the connection configuration
 transporter.verify(function(error, success) {
+    console.log("error", error);
+    console.log("Success", success);
   if (error) {
     console.log('Error connecting to email server:', error);
   } else {

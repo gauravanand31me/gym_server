@@ -103,8 +103,8 @@ html
 
         // Approve/approve Button
         if gym.verified
-          form(action=`/admin/disapprove/${gym.id}`, method="get")
+          form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")
             button(type="submit", class="action-btn disapprove-btn") Disapprove
         else
-          form(action=`/admin/approve/${gym.id}`, method="get")
+          form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
             button(type="submit", class="action-btn approve-btn") Approve

@@ -7,9 +7,9 @@ exports.adminDashboard = async (req, res) => {
     const gyms = await Gym.findAll({
       include: [
         { model: GymImage, as: 'GymImages' },  // Use the correct alias here
-        { model: Equipment, as: 'equipment' },
-        { model: Slot, as: 'slots' },
-        { model: Subscription, as: 'subscriptions' }
+        { model: Equipment, as: 'Equipment' },
+        { model: Slot, as: 'Slot' },
+        { model: Subscription, as: 'Subscription' }
       ]
     });
 

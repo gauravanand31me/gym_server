@@ -31,7 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true
     }
-  }, {});
+  }, {
+    tableName: 'BankAccount',  // Specify the table name explicitly
+    timestamps: true // Enable createdAt and updatedAt timestamps
+  });
 
   BankAccount.associate = function(models) {
     BankAccount.belongsTo(models.Gym, {

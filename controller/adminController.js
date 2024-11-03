@@ -1,13 +1,12 @@
 // controllers/adminController.js
 const { Gym, GymImage, Equipment, Slot, Subscription } = require('../models');
-const gym = require('../models/gym');
 
 exports.adminDashboard = async (req, res) => {
   try {
     // Fetch all gyms and their associated data
     const gyms = await Gym.findAll({
       include: [
-        { model: GymImage, as: 'images' },
+        { model: GymImage, as: 'GymImages' },  // Use the correct alias here
         { model: Equipment, as: 'equipment' },
         { model: Slot, as: 'slots' },
         { model: Subscription, as: 'subscriptions' }
@@ -20,7 +19,7 @@ exports.adminDashboard = async (req, res) => {
     }
 
     // Send the complete gym information
-    return gyms;
+    res.json({ status: true, gyms });
   } catch (error) {
     console.error('Error fetching gym information:', error);
     res.status(500).json({ message: 'Internal server error' });

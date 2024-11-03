@@ -3,42 +3,95 @@ doctype html
 html
   head
     title Admin Dashboard
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      .gym-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .gym-card h2 {
+        margin-top: 0;
+        color: #4CAF50;
+      }
+      .section-title {
+        font-weight: bold;
+        margin-top: 15px;
+      }
+      img {
+        margin: 5px;
+        border-radius: 5px;
+      }
+      .no-content {
+        color: #888;
+      }
+      .approve-btn {
+        display: inline-block;
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 15px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 3px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .approve-btn:hover {
+        background-color: #45a049;
+      }
   body
     h1 Admin Dashboard
     each gym in gyms
-      h2= gym.name
-      p Description: #{gym.description}
-      p Location: #{gym.location}
-      p Complete: #{gym.complete}%
-      
-      // Images Section
-      if gym.GymImages && gym.GymImages.length
-        h3 Images
-        each image in gym.GymImages
-          img(src=image.url, alt="Gym Image", width="100")
-      else
-        p No images available
+      .gym-card
+        h2= gym.name
+        p Description: #{gym.description}
+        p Location: #{gym.location}
+        p Complete: #{gym.complete}%
+        
+        // Images Section
+        if gym.GymImages && gym.GymImages.length
+          h3.section-title Images
+          each image in gym.GymImages
+            img(src=image.imageUrl, alt="Gym Image", width="100")
+        else
+          p.no-content No images available
 
-      // Equipment Section
-      if gym.Equipment && gym.Equipment.length
-        h3 Equipment
-        each equip in gym.Equipment
-          p= equip.name
-      else
-        p No equipment available
+        // Equipment Section
+        if gym.Equipment && gym.Equipment.length
+          h3.section-title Equipment
+          each equip in gym.Equipment
+            p= equip.name
+        else
+          p.no-content No equipment available
 
-      // Slots Section
-      if gym.Slots && gym.Slots.length
-        h3 Slots
-        each slot in gym.Slots
-          p= slot.startTime + " - " + slot.endTime
-      else
-        p No slots available
+        // Slots Section
+        if gym.Slots && gym.Slots.length
+          h3.section-title Slots
+          each slot in gym.Slots
+            p= slot.startTime + " - " + slot.endTime
+        else
+          p.no-content No slots available
 
-      // Subscriptions Section
-      if gym.Subscription && gym.Subscription.length
-        h3 Subscriptions
-        each subscription in gym.Subscription
-          p= subscription.type + ": $" + subscription.price
-      else
-        p No subscriptions available
+        // Subscriptions Section
+        if gym.Subscription && gym.Subscription.length
+          h3.section-title Subscriptions
+          each subscription in gym.Subscription
+            p= subscription.type + ": $" + subscription.price
+        else
+          p.no-content No subscriptions available
+
+        // Approve Button
+        form(action=`/admin/approve/${gym.id}`, method="post")
+          button(type="submit", class="approve-btn") Approve Gym

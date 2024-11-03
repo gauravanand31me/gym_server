@@ -83,7 +83,7 @@ router.get('/admin/approve/:gymId', requireAdmin, async (req, res) => {
 
     // Set the gym's approval status to true
     await gym.update({ verified: true });
-    res.redirect('/gym/api/admin/dashboard/admin/dashboard'); // Redirect back to the dashboard
+    res.redirect('/gym/api/admin/dashboard'); // Redirect back to the dashboard
   } catch (error) {
     console.error('Error approving gym:', error);
     res.status(500).send('Internal Server Error');
@@ -102,7 +102,7 @@ router.get('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
 
     // Set the gym's approval status to false
     await gym.update({ verified: false });
-    res.redirect('/gym/api/admin/dashboard/admin/dashboard'); // Redirect back to the dashboard
+    res.redirect('/gym/api/admin/dashboard'); // Redirect back to the dashboard
   } catch (error) {
     console.error('Error disapproving gym:', error);
     res.status(500).send('Internal Server Error');

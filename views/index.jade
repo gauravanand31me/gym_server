@@ -1,5 +1,86 @@
-extends layout
+// views/admin-login.pug
+doctype html
+html
+  head
+    title Admin Login
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+      }
+      .login-container {
+        width: 300px;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #ffffff;
+        text-align: center;
+      }
+      .login-container h1 {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        color: #333;
+      }
+      .login-container label {
+        font-size: 0.9rem;
+        color: #555;
+      }
+      .login-container input {
+        width: 100%;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      .login-container button {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .login-container button:hover {
+        background-color: #0056b3;
+      }
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+  body
+    .login-container
+      h1 Admin Login
+      form(id="loginForm" action="/admin/login" method="post")
+        div
+          label(for="username") Username
+          input(type="text" name="username" id="username" required)
+        div
+          label(for="password") Password
+          input(type="password" name="password" id="password" required)
+        input(type="hidden" name="redirectUrl" value="/admin/dashboard")
+        button(type="submit") Login
+      div#message(style="color: red; margin-top: 1rem;")
 
-block content
-  h1= title
-  p Welcome to #{title}
+    script.
+      // Handle form submission with a POST call
+      document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const redirectUrl = document.querySelector('input[name="redirectUrl"]').value;
+
+        try {
+          const response = await axios.post('/admin/login', { username, password });
+          if (response.status === 200) {
+            window.location.href = redirectUrl; // Redirect on success
+          }
+        } catch (error) {
+          document.getElementById('message').textContent = 'Invalid username or password';
+        }
+      });

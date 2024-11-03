@@ -13,26 +13,26 @@ exports.addEquipment = async (req, res) => {
         }
 
         // Decode the JWT token
-        const decoded = jwt.verify(token, JWT_SECRET); // Replace process.env.JWT_SECRET with your secret key
+        const decoded = jwt.verify(token, JWT_SECRET);
 
         if (!decoded || !decoded.id) {
             return res.status(401).json({ error: 'Invalid token' });
         }
 
         const gymId = decoded.id;
-        // Optional: Decode JWT token to verify user identity and permissions (if needed)
 
         // Validate input
         if (!name || quantity === undefined || !gymId) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        // Fetch the gym to ensure it exists
-       
+        // Check if equipment already exists for the gym
+        const existingEquipment = await Equipment.findOne({ where: { gymId } });
 
-      
-
-        
+        // If no equipment exists, update gym.complete by adding 10
+        if (!existingEquipment) {
+            await Gym.increment('complete', { by: 10, where: { id: gymId } });
+        }
 
         // Create new equipment entry
         await Equipment.create({
@@ -47,5 +47,4 @@ exports.addEquipment = async (req, res) => {
         console.error('Error adding equipment:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-
-}
+};

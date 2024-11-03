@@ -72,7 +72,7 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
 });
 
 // Approve gym
-router.post('/admin/approve/:gymId', requireAdmin, async (req, res) => {
+router.get('/admin/approve/:gymId', requireAdmin, async (req, res) => {
   try {
     const { gymId } = req.params;
     const gym = await Gym.findByPk(gymId);
@@ -91,7 +91,7 @@ router.post('/admin/approve/:gymId', requireAdmin, async (req, res) => {
 });
 
 // Disapprove gym
-router.post('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
+router.get('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
   try {
     const { gymId } = req.params;
     const gym = await Gym.findByPk(gymId);

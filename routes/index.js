@@ -23,6 +23,7 @@ const { getAllEquipmentList } = require('../controller/getAllEquipmentList');
 const upload = require('../middleware/upload');
 const { getAllBookingsToGym } = require('../controller/getAllBookingGym');
 const { verifyBooking } = require('../controller/verifyBooking');
+const BankAccountController = require('../controllers/BankAccountController');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -40,8 +41,9 @@ router.put('/subscriptions', modifySubscription);
 router.get('/equipments/list', getAllEquipmentList);
 router.get('/booking', getAllBookingsToGym);
 router.get('/booking/verify', verifyBooking);
-
-
+router.post('/banking/add', BankAccountController.createBankAccount);
+router.put('/banking/update', BankAccountController.updateBankAccount);
+router.delete('/banking/get', BankAccountController.getBankAccount);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 

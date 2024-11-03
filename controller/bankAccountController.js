@@ -1,5 +1,7 @@
 // controllers/BankAccountController.js
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const { BankAccount } = require('../models');
+const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
 
   // Insert a new bank account record for a specific gymId

@@ -11,18 +11,34 @@ html
       p Location: #{gym.location}
       p Complete: #{gym.complete}%
       
-      h3 Images
-      each image in gym.GymImages
-        img(src=image.url, alt="Gym Image", width="100")
+      // Images Section
+      if gym.GymImages && gym.GymImages.length
+        h3 Images
+        each image in gym.GymImages
+          img(src=image.url, alt="Gym Image", width="100")
+      else
+        p No images available
 
-      h3 Equipment
-      each equip in gym.Equipment
-        p= equip.name
+      // Equipment Section
+      if gym.Equipment && gym.Equipment.length
+        h3 Equipment
+        each equip in gym.Equipment
+          p= equip.name
+      else
+        p No equipment available
 
-      h3 Slots
-      each slot in gym.Slots
-        p= slot.startTime + " - " + slot.endTime
+      // Slots Section
+      if gym.Slots && gym.Slots.length
+        h3 Slots
+        each slot in gym.Slots
+          p= slot.startTime + " - " + slot.endTime
+      else
+        p No slots available
 
-      h3 Subscriptions
-      each subscription in gym.Subscription
-        p= subscription.type + ": $" + subscription.price
+      // Subscriptions Section
+      if gym.Subscription && gym.Subscription.length
+        h3 Subscriptions
+        each subscription in gym.Subscription
+          p= subscription.type + ": $" + subscription.price
+      else
+        p No subscriptions available

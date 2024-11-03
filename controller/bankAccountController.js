@@ -1,6 +1,6 @@
 // controllers/BankAccountController.js
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-const { BankAccount } = require('../models');
+const { Gym, BankAccount } = require('../models');
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 const { v4: uuidv4 } = require('uuid');
 
@@ -27,6 +27,7 @@ exports.createBankAccount = async (req, res) => {
       // Create the bank account with only the gymId
       const id = uuidv4();
       const bankAccount = await BankAccount.create({ id, gymId });
+      await Gym.increment('complete', { by: 30, where: { id: gymId } });
       res.status(201).json(bankAccount);
     } catch (error) {
       console.error(error);

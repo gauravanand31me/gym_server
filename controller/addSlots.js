@@ -36,7 +36,7 @@ exports.addSlot = async (req, res) => {
 
         // If no equipment exists, update gym.complete by adding 10
         if (!existingSlot) {
-            await Gym.increment('complete', { by: 10, where: { id: gymId } });
+            await Gym.increment('complete', { by: 20, where: { id: gymId } });
         }
 
         // Create new slot entry

@@ -166,6 +166,13 @@ router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, re
     // Get the image URLs from the uploaded files
     const imageUrls = req.files.map(file => file.location); // Assuming `file.location` contains the URL of the uploaded image
 
+    const existingImage = await GymImage.findOne({ where: { gymId } });
+
+    // If no images exist, increment gym.complete by 10
+    if (!existingImage) {
+        await Gym.increment('complete', { by: 10, where: { id: gymId } });
+    }
+
     // Save each image URL to the database
     const imagePromises = imageUrls.map(url =>
       GymImage.create({ id: uuidv4(), imageUrl: url, gymId })

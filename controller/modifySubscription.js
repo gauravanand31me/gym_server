@@ -54,6 +54,8 @@ exports.modifySubscription = async (req, res) => {
                     yearly: yearlyPrice,
                     gymId
                 });
+
+                await Gym.increment('complete', { by: 20, where: { id: gymId } });
             } else {
                 await subscription.update({
                     daily: dailyPrice,

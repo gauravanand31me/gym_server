@@ -30,7 +30,7 @@ exports.deleteSlot = async (req, res) => {
 
         // If no equipment exists, update gym.complete by adding 10
         if (!existingSlot) {
-            await Gym.increment('complete', { by: -10, where: { id: decoded.id } });
+            await Gym.increment('complete', { by: -20, where: { id: decoded.id } });
         }
     
         res.json({ message: 'Slot deleted successfully' });

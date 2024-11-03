@@ -49,7 +49,9 @@ const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
 
 
-
+router.get("/admin", (req, res) => {
+  res.render("index"); // Renders the 'admin-login' Jade template
+});
 
 router.post('/auth/verify-token', (req, res) => {
     const token = req.headers['authorization'];

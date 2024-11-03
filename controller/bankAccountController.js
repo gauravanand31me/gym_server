@@ -1,9 +1,9 @@
 // controllers/BankAccountController.js
 const { BankAccount } = require('../models');
 
-class BankAccountController {
+
   // Insert a new bank account record for a specific gymId
-  static async createBankAccount(req, res) {
+exports.createBankAccount = async (req, res) => {
     try {
         const token = req.headers['auth']; // Get JWT token from headers
 
@@ -32,7 +32,7 @@ class BankAccountController {
   }
 
   // Update the bank account details for a specific gymId
-  static async updateBankAccount(req, res) {
+exports.updateBankAccount = async (req, res) => {
     try {
         const token = req.headers['auth']; // Get JWT token from headers
 
@@ -45,7 +45,7 @@ class BankAccountController {
 
         const gymId = decoded.id;
 
-        
+
       const { bankAccountName, bankAccountNumber, bankIFSC, bankName, bankBranch } = req.body;
 
       // Find the existing bank account by gymId
@@ -71,7 +71,7 @@ class BankAccountController {
   }
 
   // Get the bank account details for a specific gymId
-  static async getBankAccount(req, res) {
+exports.getBankAccount = async(req, res) => {
     try {
         const token = req.headers['auth']; // Get JWT token from headers
 
@@ -95,7 +95,7 @@ class BankAccountController {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  }
 }
+
 
 module.exports = BankAccountController;

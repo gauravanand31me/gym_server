@@ -23,7 +23,7 @@ const { getAllEquipmentList } = require('../controller/getAllEquipmentList');
 const upload = require('../middleware/upload');
 const { getAllBookingsToGym } = require('../controller/getAllBookingGym');
 const { verifyBooking } = require('../controller/verifyBooking');
-const BankAccountController = require('../controllers/BankAccountController');
+const BankAccountController = require('../controller/bankAccountController');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);

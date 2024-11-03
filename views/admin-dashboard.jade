@@ -1,0 +1,28 @@
+// views/admin-dashboard.pug
+doctype html
+html
+  head
+    title Admin Dashboard
+  body
+    h1 Admin Dashboard
+    each gym in gyms
+      h2= gym.name
+      p Description: #{gym.description}
+      p Location: #{gym.location}
+      p Complete: #{gym.complete}%
+      
+      h3 Images
+      each image in gym.images
+        img(src=image.url, alt="Gym Image", width="100")
+
+      h3 Equipment
+      each equip in gym.equipment
+        p= equip.name
+
+      h3 Slots
+      each slot in gym.slots
+        p= slot.startTime + " - " + slot.endTime
+
+      h3 Subscriptions
+      each subscription in gym.subscriptions
+        p= subscription.type + ": $" + subscription.price

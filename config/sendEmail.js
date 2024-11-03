@@ -34,11 +34,12 @@ exports.sendEmail = async (email) => {
 
   // Send the email
   try {
+    console.log("transporter", transporter);
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "Verification email sent." });
+    return true
   } catch (error) {
     console.error("Error sending verification email:", error);
-    res.status(500).json({ message: "Failed to send verification email." });
+    return false;
   }
 };
 

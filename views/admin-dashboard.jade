@@ -4,15 +4,35 @@ html
   head
     title Admin Dashboard
     style.
+      * {
+        box-sizing: border-box;
+      }
       body {
         font-family: Arial, sans-serif;
         background-color: #f5f5f5;
         margin: 0;
         padding: 20px;
       }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
       h1 {
         text-align: center;
         color: #333;
+      }
+      .search-bar {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .search-bar input {
+        width: 100%;
+        max-width: 400px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
       }
       .gym-card {
         background-color: #fff;
@@ -60,51 +80,91 @@ html
       .disapprove-btn:hover {
         background-color: #c0392b;
       }
+      .no-results {
+        text-align: center;
+        color: #888;
+      }
   body
-    h1 Admin Dashboard
-    each gym in gyms
-      .gym-card
-        h2= gym.name
-        p Description: #{gym.description}
-        p Location: #{gym.location}
-        p Complete: #{gym.complete}%
-        
-        // Images Section
-        if gym.GymImages && gym.GymImages.length
-          h3.section-title Images
-          each image in gym.GymImages
-            img(src=image.imageUrl, alt="Gym Image", width="100")
-        else
-          p.no-content No images available
+    .container
+      h1 Admin Dashboard
+      
+      // Search Bar
+      .search-bar
+        input#searchInput(type="text", placeholder="Search gyms by name...")
 
-        // Equipment Section
-        if gym.Equipment && gym.Equipment.length
-          h3.section-title Equipment
-          each equip in gym.Equipment
-            p= equip.name
-        else
-          p.no-content No equipment available
+      // Gym Listings
+      each gym in gyms
+        .gym-card(data-name=gym.name.toLowerCase())
+          h2= gym.name
+          p Description: #{gym.description}
+          p Location: #{gym.location}
+          p Complete: #{gym.complete}%
+          
+          // Images Section
+          if gym.GymImages && gym.GymImages.length
+            h3.section-title Images
+            each image in gym.GymImages
+              img(src=image.imageUrl, alt="Gym Image", width="100")
+          else
+            p.no-content No images available
 
-        // Slots Section
-        if gym.Slots && gym.Slots.length
-          h3.section-title Slots
-          each slot in gym.Slots
-            p= slot.startTime + " - " + slot.price
-        else
-          p.no-content No slots available
+          // Equipment Section
+          if gym.Equipment && gym.Equipment.length
+            h3.section-title Equipment
+            each equip in gym.Equipment
+              p= equip.name
+          else
+            p.no-content No equipment available
 
-        // Subscriptions Section
-        if gym.Subscription && gym.Subscription.length
-          h3.section-title Subscriptions
-          each subscription in gym.Subscription
-            p= subscription.type + ": $" + subscription.price
-        else
-          p.no-content No subscriptions available
+          // Slots Section
+          if gym.Slots && gym.Slots.length
+            h3.section-title Slots
+            each slot in gym.Slots
+              p= slot.startTime + " - " + slot.price
+          else
+            p.no-content No slots available
 
-        // Approve/approve Button
-        if gym.verified
-          form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")
-            button(type="submit", class="action-btn disapprove-btn") Disapprove
-        else
-          form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
-            button(type="submit", class="action-btn approve-btn") Approve
+          // Subscriptions Section
+          if gym.Subscription && gym.Subscription.length
+            h3.section-title Subscriptions
+            each subscription in gym.Subscription
+              p= subscription.type + ": $" + subscription.price
+          else
+            p.no-content No subscriptions available
+
+          // Approve/Disapprove Button
+          if gym.verified
+            form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")
+              button(type="submit", class="action-btn disapprove-btn") Disapprove
+          else
+            form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
+              button(type="submit", class="action-btn approve-btn") Approve
+
+      // No Results Message (hidden initially)
+      p.no-results#noResultsMessage No gyms found
+
+    // Script for Search Functionality
+    script.
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const gymCards = document.querySelectorAll(".gym-card");
+        const noResultsMessage = document.getElementById("noResultsMessage");
+
+        searchInput.addEventListener("input", function () {
+          const query = searchInput.value.toLowerCase();
+          let visibleCount = 0;
+
+          gymCards.forEach(card => {
+            const gymName = card.getAttribute("data-name");
+            if (gymName.includes(query)) {
+              card.style.display = "block";
+              visibleCount++;
+            } else {
+              card.style.display = "none";
+            }
+          });
+
+          // Show or hide the no results message
+          noResultsMessage.style.display = visibleCount === 0 ? "block" : "none";
+        });
+      });

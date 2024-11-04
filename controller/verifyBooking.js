@@ -39,7 +39,7 @@ console.log("Decoded Value received", decoded);
     }
 
     // Step 2: Check if the booking date matches the current date
-    const currentDate = moment().format('YYYY-MM-DD');
+    const currentDate = new Date();
     const bookingDate = moment(booking.bookingDate).format('YYYY-MM-DD');
 
     const date = new Date(bookingDate);

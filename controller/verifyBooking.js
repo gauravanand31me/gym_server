@@ -50,7 +50,7 @@ console.log("Decoded Value received", decoded);
     cur_date.setHours(cur_date.getHours() + 5, cur_date.getMinutes() + 30);
     const formattedCurrentDate = cur_date.toISOString().slice(0, 10);
 
-    console.log("currentDate", currentDate);
+    console.log("currentDate", formattedCurrentDate);
     console.log("bookingDate", formattedDate);
     if (formattedCurrentDate !== formattedDate) {
       return res.status(400).json({ message: 'Booking is not for today' });

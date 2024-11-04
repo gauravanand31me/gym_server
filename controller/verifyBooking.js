@@ -42,8 +42,16 @@ console.log("Decoded Value received", decoded);
     const currentDate = moment().format('YYYY-MM-DD');
     const bookingDate = moment(booking.bookingDate).format('YYYY-MM-DD');
 
+    const date = new Date(bookingDate);
+    date.setHours(date.getHours() + 5, date.getMinutes() + 30);
+    const formattedDate = date.toISOString().slice(0, 10);
+
+    
+    currentDate.setHours(currentDate.getHours() + 5, currentDate.getMinutes() + 30);
+    const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
+
     console.log("currentDate", currentDate);
-    console.log("bookingDate", bookingDate);
+    console.log("bookingDate", formattedDate);
     if (currentDate !== bookingDate) {
       return res.status(400).json({ message: 'Booking is not for today' });
     }

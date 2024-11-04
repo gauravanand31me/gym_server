@@ -52,9 +52,9 @@ console.log("Decoded Value received", decoded);
 
     console.log("currentDate", formattedCurrentDate);
     console.log("bookingDate", formattedDate);
-    if (formattedCurrentDate !== formattedDate) {
-      return res.status(400).json({ message: 'Booking is not for today' });
-    }
+    // if (formattedCurrentDate !== formattedDate) {
+    //   return res.status(400).json({ message: 'Booking is not for today' });
+    // }
 
     // Step 3: Fetch the user using their ID from the booking
     const [user] = await sequelize.query(

@@ -39,20 +39,20 @@ console.log("Decoded Value received", decoded);
     }
 
     // Step 2: Check if the booking date matches the current date
-    const currentDate = new Date();
+    const currentDate = moment().format('YYYY-MM-DD');
     const bookingDate = moment(booking.bookingDate).format('YYYY-MM-DD');
 
     const date = new Date(bookingDate);
     date.setHours(date.getHours() + 5, date.getMinutes() + 30);
     const formattedDate = date.toISOString().slice(0, 10);
 
-    
-    currentDate.setHours(currentDate.getHours() + 5, currentDate.getMinutes() + 30);
-    const formattedCurrentDate = currentDate.toISOString().slice(0, 10);
+    const cur_date = new Date(currentDate);
+    cur_date.setHours(cur_date.getHours() + 5, cur_date.getMinutes() + 30);
+    const formattedCurrentDate = cur_date.toISOString().slice(0, 10);
 
     console.log("currentDate", currentDate);
     console.log("bookingDate", formattedDate);
-    if (currentDate !== bookingDate) {
+    if (formattedCurrentDate !== formattedDate) {
       return res.status(400).json({ message: 'Booking is not for today' });
     }
 

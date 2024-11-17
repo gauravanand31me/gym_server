@@ -9,6 +9,9 @@ service: 'Godaddy',
   auth: {
     user: process.env.GODADDY_EMAIL, // GoDaddy email address
     pass: process.env.GODADDY_PASS // GoDaddy email password
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 

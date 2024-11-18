@@ -57,3 +57,41 @@ exports.login = async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+exports.sendVerificationLink = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate the email input
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ error: "A valid email is required" });
+    }
+
+    // Find the gym with the provided email
+    const gym = await Gym.findOne({ where: { email } });
+
+    if (!gym) {
+      return res.status(404).json({ error: "Gym with this email does not exist" });
+    }
+
+    // Generate a new verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    // Update the token and its expiry in the database
+    await gym.update({
+      token: verificationToken
+    });
+
+    // Send verification email
+    sendEmail(email, verificationToken);
+
+    return res.status(200).json({
+      message: "Verification link sent successfully",
+    });
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};

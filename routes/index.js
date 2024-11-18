@@ -28,6 +28,7 @@ const { adminDashboard } = require('../controller/adminController');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
+router.post('/send-verification-link', loginController.sendVerificationLink);
 router.get('/fetch', fetchController.fetchGym);
 router.put('/update', updateController.updateGymDetails);
 router.post('/equipment', addEquipment);

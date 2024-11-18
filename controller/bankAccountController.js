@@ -67,7 +67,7 @@ exports.updateBankAccount = async (req, res) => {
       const { bankAccountName, bankAccountNumber, bankIFSC, bankName, bankBranch } = req.body;
 
       // Find the existing bank account by gymId
-      const bankAccount = await BankAccount.findOne({ where: { gymId } });
+      const bankAccount = await BankAccount.findOne({ where: { gymId, token: code } });
       if (!bankAccount) {
         return res.status(404).json({ message: 'Bank account not found' });
       }

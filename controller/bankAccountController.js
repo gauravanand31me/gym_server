@@ -27,7 +27,7 @@ exports.createBankAccount = async (req, res) => {
       // Create the bank account with only the gymId
       const id = uuidv4();
       const bankAccount = await BankAccount.create({ id, gymId });
-      await Gym.increment('complete', { by: 30, where: { id: gymId } });
+      await Gym.increment('complete', { by: 20, where: { id: gymId } });
       res.status(201).json(bankAccount);
     } catch (error) {
       console.error(error);

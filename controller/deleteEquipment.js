@@ -31,7 +31,7 @@ exports.deleteEquipment = async (req, res) => {
 
         // If no equipment exists, update gym.complete by adding 10
         if (!existingEquipment) {
-            await Gym.increment('complete', { by: -20, where: { id: decoded.id } });
+            await Gym.increment('complete', { by: -10, where: { id: decoded.id } });
         }
 
     

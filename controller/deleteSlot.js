@@ -36,7 +36,7 @@ exports.deleteSlot = async (req, res) => {
 
         // If no slot exists with timePeriod > 0, decrement gym.complete by 20
         if (!existingSlot) {
-            await Gym.increment('complete', { by: -20, where: { id: decoded.id } });
+            await Gym.increment('complete', { by: -10, where: { id: decoded.id } });
         }
     
         res.json({ message: 'Slot timePeriod updated successfully' });

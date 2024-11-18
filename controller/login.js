@@ -96,3 +96,87 @@ exports.sendVerificationLink = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+exports.verifyEmailPage = async (req, res) => {
+  try {
+    const { token, email } = req.query;
+
+    // Validate the inputs
+    if (!token || !email || !email.includes("@")) {
+      return res.send(`
+        <html>
+          <body>
+            <h1>Email Verification</h1>
+            <p style="color: red;">Invalid or missing token and email.</p>
+          </body>
+        </html>
+      `);
+    }
+
+    // Find the gym record by email
+    const gym = await Gym.findOne({ where: { email } });
+
+    if (!gym) {
+      return res.send(`
+        <html>
+          <body>
+            <h1>Email Verification</h1>
+            <p style="color: red;">No gym found with this email.</p>
+          </body>
+        </html>
+      `);
+    }
+
+    // Check if the token matches and if it has expired
+    const currentTime = new Date();
+    if (gym.token !== token) {
+      return res.send(`
+        <html>
+          <body>
+            <h1>Email Verification</h1>
+            <p style="color: red;">Invalid token.</p>
+          </body>
+        </html>
+      `);
+    }
+
+    if (new Date(gym.token_expires) < currentTime) {
+      return res.send(`
+        <html>
+          <body>
+            <h1>Email Verification</h1>
+            <p style="color: red;">Token has expired. Please request a new verification email.</p>
+          </body>
+        </html>
+      `);
+    }
+
+    // Update the gym's `is_email_verified` status and clear the token
+    await gym.update({
+      is_email_verified: true,
+      token: null,
+      token_expires: null,
+    });
+
+    return res.send(`
+      <html>
+        <body>
+          <h1>Email Verification</h1>
+          <p style="color: green;">Your email has been successfully verified!</p>
+          <a href="https://yupluck.com/login">Go to Login</a>
+        </body>
+      </html>
+    `);
+  } catch (error) {
+    console.error(error);
+    return res.send(`
+      <html>
+        <body>
+          <h1>Email Verification</h1>
+          <p style="color: red;">An error occurred while verifying your email. Please try again later.</p>
+        </body>
+      </html>
+    `);
+  }
+};

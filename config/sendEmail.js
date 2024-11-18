@@ -10,7 +10,7 @@ exports.sendEmail = async (email, token) => {
 
 
   // Generate verification link
-  const verificationLink = `https://yupluck.com/verify-email?token=${token}&email=${email}`;
+  const verificationLink = `https://yupluck.com/gym/api/verify-email?token=${token}&email=${email}`;
 
   // Save the token and email in your database, associated with the user
 

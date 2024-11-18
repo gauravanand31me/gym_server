@@ -130,6 +130,7 @@ exports.verifyEmailPage = async (req, res) => {
 
     // Check if the token matches and if it has expired
     const currentTime = new Date();
+    const tokenExpires = currentTime.setMinutes(currentTime.getMinutes() + 5);
     if (gym.token !== token) {
       return res.send(`
         <html>
@@ -141,7 +142,7 @@ exports.verifyEmailPage = async (req, res) => {
       `);
     }
 
-    if (new Date(gym.token_expires) < currentTime) {
+    if (tokenExpires < currentTime) {
       return res.send(`
         <html>
           <body>

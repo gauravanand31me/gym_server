@@ -64,7 +64,7 @@ exports.updateBankAccount = async (req, res) => {
         const gymId = decoded.id;
 
 
-      const { bankAccountName, bankAccountNumber, bankIFSC, bankName, bankBranch } = req.body;
+      const { bankAccountName, bankAccountNumber, bankIFSC, bankName, bankBranch, code } = req.body;
 
       // Find the existing bank account by gymId
       const bankAccount = await BankAccount.findOne({ where: { gymId, token: code } });

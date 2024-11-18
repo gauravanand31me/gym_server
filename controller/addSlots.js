@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { Gym, Slot } = require('../models');
-const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
+const { Gym, Slot, Subscription } = require('../models');
 const { v4: uuidv4 } = require('uuid');
+const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
 exports.addSlot = async (req, res) => {
     try {
@@ -34,7 +34,7 @@ exports.addSlot = async (req, res) => {
 
         const existingSlot = await Slot.findOne({ where: { gymId } });
 
-        // If no equipment exists, update gym.complete by adding 10
+        // If no slot exists, update gym.complete by adding 10
         if (!existingSlot) {
             await Gym.increment('complete', { by: 10, where: { id: gymId } });
         }
@@ -46,12 +46,39 @@ exports.addSlot = async (req, res) => {
             price,
             startTime, // Include startTime if needed
             timePeriod, // Ensure timePeriod is included and is an integer
-            gymId
+            gymId,
         });
 
-        res.status(201).json({ message: 'Slot added successfully' });
+        // Update subscription based on the minimum slot price
+        const subscription = await Subscription.findOne({ where: { gymId } });
+
+        const dailyPrice = price; // Daily price is the slot price
+        const monthlyPrice = dailyPrice * 30; // Example: 30x daily price for monthly
+        const yearlyPrice = dailyPrice * 365; // Example: 365x daily price for yearly
+
+        if (!subscription) {
+            // Create a new subscription if one doesn't exist
+            await Subscription.create({
+                id: uuidv4(),
+                daily: dailyPrice,
+                monthly: monthlyPrice,
+                yearly: yearlyPrice,
+                gymId,
+            });
+
+            await Gym.increment('complete', { by: 10, where: { id: gymId } });
+        } else {
+            // Update the existing subscription with the new prices
+            await subscription.update({
+                daily: Math.min(subscription.daily, dailyPrice),
+                monthly: Math.min(subscription.monthly, monthlyPrice),
+                yearly: Math.min(subscription.yearly, yearlyPrice),
+            });
+        }
+
+        res.status(201).json({ message: 'Slot added and subscription updated successfully' });
     } catch (error) {
-        console.error('Error adding slot:', error);
+        console.error('Error adding slot and updating subscription:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-}
+};

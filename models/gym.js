@@ -40,6 +40,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    is_email_verified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    token: {
+      type: DataTypes.STRING,
+      defaultValue: "NA"
+    },
+    token_expires: {
+      type: DataTypes.STRING,
+      defaultValue: "NA"
+    },
     complete: {
       type: DataTypes.INTEGER,
       defaultValue: 0

@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { Gym, Equipment, Slot, Subscription, GymImage } = require("../models");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmail } = require("../config/sendEmail");
+const crypto = require("crypto"); // for generating unique tokens
 
 // Helper function to validate input
 const validateInput = (req) => {
@@ -33,26 +34,7 @@ const validateInput = (req) => {
   if (!country) errors.push("Country is required");
   if (!pinCode) errors.push("Pin code is required");
 
-  // if (equipmentDetails && equipmentDetails.length > 0) {
-  //   equipmentDetails.forEach((item, index) => {
-  //     if (!item.name || !item.quantity) {
-  //       errors.push(`Equipment at index ${index} is missing name or quantity`);
-  //     }
-  //   });
-  // }
-
-  // if (slotDetails && slotDetails.length > 0) {
-  //   slotDetails.forEach((slot, index) => {
-  //     if (!slot.capacity || !slot.timePeriod) {
-  //       errors.push(`Slot at index ${index} is missing capacity or time period`);
-  //     }
-  //   });
-  // }
-
-  // if (!subscriptionPricing || !subscriptionPricing.dailyPrice || !subscriptionPricing.monthlyPrice || !subscriptionPricing.yearlyPrice) {
-  //   errors.push('Subscription pricing (daily, monthly, yearly) is required');
-  // }
-
+  
   return errors;
 };
 
@@ -63,7 +45,7 @@ exports.registerGym = async (req, res) => {
     if (errors.length > 0) {
       return res.status(400).json({ errors });
     }
-
+    const verificationToken = crypto.randomBytes(32).toString("hex");
     const {
       email,
       password,
@@ -107,6 +89,9 @@ exports.registerGym = async (req, res) => {
       latitude,
       longitude,
       verified: false,
+      is_email_verified: false,
+      token: verificationToken,
+      token_expires: "5m",
       complete: 10
     });
 
@@ -117,7 +102,7 @@ exports.registerGym = async (req, res) => {
       gymId: gym.id,
     });
 
-    sendEmail(email);
+    sendEmail(email, verificationToken);
 
     return res
       .status(201)

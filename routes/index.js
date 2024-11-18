@@ -31,6 +31,7 @@ router.post('/login', loginController.login);
 router.post('/send-verify-link', loginController.sendVerificationLink);
 router.get('/verify-email', loginController.verifyEmailPage);
 router.get('/reset-password', loginController.resetPassword);
+router.post('/reset-password', loginController.resetUserPassword);
 router.post('/send-password-reset-link', loginController.sendPasswordResetLink);
 router.get('/fetch', fetchController.fetchGym);
 router.put('/update', updateController.updateGymDetails);

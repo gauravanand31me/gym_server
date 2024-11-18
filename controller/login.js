@@ -235,3 +235,61 @@ exports.resetPassword = async (req, res) => {
   // Perform the redirect
   return res.redirect(redirectUrl);
 };
+
+
+exports.resetUserPassword = async (req, res) => {
+  try {
+    const { email, token, password, confirmPassword } = req.body;
+
+    // Validate input
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ error: "A valid email is required" });
+    }
+    if (!token) {
+      return res.status(400).json({ error: "Reset token is required" });
+    }
+    if (!password || password.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 6 characters long" });
+    }
+    if (password !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ error: "Password and confirm password must match" });
+    }
+
+    // Check if the gym exists and if the token matches
+    const gym = await Gym.findOne({ where: { email } });
+
+    if (!gym) {
+      return res.status(404).json({ error: "Gym not found" });
+    }
+
+    if (gym.token !== token) {
+      return res.status(400).json({ error: "Invalid or expired token" });
+    }
+
+    // Token validation (e.g., check expiration time)
+    const tokenIssuedAt = new Date(gym.updatedAt); // Assume `token_expires` is checked in minutes
+    const currentTime = new Date();
+    const tokenExpiry = 5 * 60 * 1000; // 5 minutes in milliseconds
+    if (currentTime - tokenIssuedAt > tokenExpiry) {
+      return res.status(400).json({ error: "Token has expired" });
+    }
+
+    // Update the gym's password and clear the token
+    await gym.update({
+      password, // Assuming the model handles hashing
+      token: null, // Clear the token after successful reset
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Password reset successfully. You can now log in." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+

@@ -50,6 +50,7 @@ router.get('/booking/verify', verifyBooking);
 router.post('/banking/add', BankAccountController.createBankAccount);
 router.put('/banking/update', BankAccountController.updateBankAccount);
 router.get('/banking/get', BankAccountController.getBankAccount);
+router.post('/banking/send-verification-code', BankAccountController.sendVerificationCode);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 

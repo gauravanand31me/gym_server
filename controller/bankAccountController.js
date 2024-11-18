@@ -3,6 +3,20 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const { Gym, BankAccount } = require('../models');
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
+const { sendEmail } = require('../config/sendEmail');
+
+
+function generateRandomAlphanumeric(length) {
+  if (length <= 0) {
+    throw new Error('Length must be a positive integer.');
+  }
+  return crypto
+    .randomBytes(length)
+    .toString('base64') // Converts to a Base64 string
+    .replace(/[^a-zA-Z0-9]/g, '') // Removes non-alphanumeric characters
+    .slice(0, length); // Trims to the desired length
+}
 
   // Insert a new bank account record for a specific gymId
 exports.createBankAccount = async (req, res) => {
@@ -98,6 +112,38 @@ exports.getBankAccount = async(req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+exports.sendVerificationCode = async (req, res) => {
+  try {
+    const token = req.headers['auth']; // Get JWT token from headers
+
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+
+    // Decode the JWT token
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    const gymId = decoded.id;
+
+    const gym = await Gym.findByPk(gymId);
+    if (!gym) {
+        return res.status(404).json({ error: 'Gym not found' });
+    }
+
+    const randomToken = generateRandomAlphanumeric(6);
+    await gym.update({
+        token: randomToken, // Clear the token after successful reset
+    });
+    sendEmail(gym.email, randomToken, "bank");
+    res.status(200).json({status: true, message: "Code has been sent successfully to your email id"});
+
+  }
+
+    catch (e) {
+
     }
 }
 

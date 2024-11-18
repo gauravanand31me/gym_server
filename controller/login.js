@@ -9,6 +9,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log("Password received", password);
+    
     // Check if both email and password are provided
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
@@ -24,8 +25,13 @@ exports.login = async (req, res) => {
 
     console.log('Hashed Password in DB:', gym.password);
     
+    // Check if the email is verified
+    if (gym.is_email_verified !== true) {
+      return res.status(403).json({ error: 'Email is not verified' });
+    }
+
     // Compare passwords using bcrypt
-    const passwordMatch = await bcrypt.compareSync(password, gym.password);
+    const passwordMatch = await bcrypt.compare(password, gym.password);
     console.log("passwordMatch", passwordMatch);
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });

@@ -18,7 +18,7 @@ exports.sendEmail = async (email, token, type="nothing") => {
   const mailOptions = {
     from: "Contact@yupluck.com",
     to: email,
-    subject:  (type === "reset-password") ? "🌟 Reset your password" :  "🌟 Verify Your Email Address - Welcome to Yupluck!",
+    subject: "🌟 Verify Your Email Address - Welcome to Yupluck!",
     html: `
       <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background-color: #f9f9f9;">
         <div style="text-align: center; padding-bottom: 20px;">
@@ -30,7 +30,7 @@ exports.sendEmail = async (email, token, type="nothing") => {
         </p>
         <div style="text-align: center; margin: 20px 0;">
           <a href="${verificationLink}" style="display: inline-block; padding: 12px 20px; font-size: 16px; color: #ffffff; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">
-            ${(type === "reset-password") ? "🌟 Reset your password" : "Verify email address"}
+            Verify Email Address
           </a>
         </div>
         <p style="font-size: 14px; line-height: 1.5; color: #777; text-align: center;">
@@ -39,7 +39,7 @@ exports.sendEmail = async (email, token, type="nothing") => {
         <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
         <p style="font-size: 12px; line-height: 1.5; color: #aaa; text-align: center;">
           Need help? Contact our support team at 
-          <a href="mailto:support@yupluck.com" style="color: #4CAF50; text-decoration: none;">contact@yupluck.com</a>.
+          <a href="mailto:support@yupluck.com" style="color: #4CAF50; text-decoration: none;">support@yupluck.com</a>.
         </p>
         <div style="text-align: center; padding-top: 20px;">
           <p style="font-size: 12px; color: #aaa;">

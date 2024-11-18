@@ -3,14 +3,14 @@ const router = express.Router();
 
 const transporter = require("./transporter"); // transporter configuration from above
 
-exports.sendEmail = async (email, token) => {
+exports.sendEmail = async (email, token, type="nothing") => {
 
   
   // Generate a unique token (store this in your database with an expiry time)
 
 
   // Generate verification link
-  const verificationLink = `https://yupluck.com/gym/api/verify-email?token=${token}&email=${email}`;
+  const verificationLink = (type === "reset-password")? `https://yupluck.com/gym/api/reset-password?token=${token}&email=${email}` : `https://yupluck.com/gym/api/verify-email?token=${token}&email=${email}`;
 
   // Save the token and email in your database, associated with the user
 

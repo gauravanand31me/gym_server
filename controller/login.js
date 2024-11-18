@@ -9,7 +9,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("Password received", password);
     
     // Check if both email and password are provided
     if (!email || !password) {
@@ -98,6 +97,50 @@ exports.sendVerificationLink = async (req, res) => {
 };
 
 
+
+
+
+
+
+exports.sendPasswordResetLink = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate the email input
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ error: "A valid email is required" });
+    }
+
+    // Find the gym with the provided email
+    const gym = await Gym.findOne({ where: { email } });
+
+    if (!gym) {
+      return res.status(404).json({ error: "Gym with this email does not exist" });
+    }
+
+    // Generate a new verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    // Update the token and its expiry in the database
+    await gym.update({
+      token: verificationToken
+    });
+
+    // Send verification email
+    sendEmail(email, verificationToken, "reset-password");
+
+    return res.status(200).json({
+      message: "Verification link sent successfully",
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
 exports.verifyEmailPage = async (req, res) => {
   try {
     const { token, email } = req.query;
@@ -180,4 +223,15 @@ exports.verifyEmailPage = async (req, res) => {
       </html>
     `);
   }
+};
+
+exports.resetPassword = async (req, res) => {
+  // Get the query parameters from the request
+  const queryParams = req.query;
+  
+  // Build the URL for the redirection
+  const redirectUrl = `https://yupluck.com/reset-password?${new URLSearchParams(queryParams).toString()}`;
+
+  // Perform the redirect
+  return res.redirect(redirectUrl);
 };

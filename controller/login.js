@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { Gym } = require('../models'); // Assuming Gym is the model that stores gym credentials
 const crypto = require("crypto"); // for generating unique tokens
+const { sendEmail } = require('../config/sendEmail');
 // Secret key for JWT (should be in environment variables for production)
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 

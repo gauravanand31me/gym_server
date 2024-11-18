@@ -1,3 +1,5 @@
+const transporter = require("./transporter"); // transporter configuration from above
+
 exports.sendEmail = async (email, token, type = "nothing") => {
   const logoUrl = "https://yupluck.com/static/media/logo3.b510b307d6f836b0566a.png";
 
@@ -94,3 +96,5 @@ exports.sendEmail = async (email, token, type = "nothing") => {
     return false;
   }
 };
+
+

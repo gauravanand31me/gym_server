@@ -80,7 +80,7 @@ html
       
       // Search Bar
       .search-bar
-        input#searchInput(type="text", placeholder="Search gyms by name...")
+        input#searchInput(type="text", placeholder="Search gyms by ID...")
 
       // Gym Table
       if gyms && gyms.length
@@ -97,7 +97,7 @@ html
               th Actions
           tbody
             each gym in gyms
-              tr(data-name=gym.name.toLowerCase())
+              tr(data-name=gym.gym_unique_id)
                 td= gym.gym_unique_id
                 td= gym.name
                 

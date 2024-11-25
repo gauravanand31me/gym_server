@@ -4,9 +4,6 @@ html
   head
     title Admin Dashboard
     style.
-      * {
-        box-sizing: border-box;
-      }
       body {
         font-family: Arial, sans-serif;
         background-color: #f5f5f5;
@@ -34,37 +31,29 @@ html
         border-radius: 4px;
         font-size: 16px;
       }
-      .gym-card {
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
         background-color: #fff;
+      }
+      th, td {
         border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 8px;
+        text-align: left;
       }
-      .gym-card h2 {
-        margin-top: 0;
-        color: #4CAF50;
-      }
-      .section-title {
-        font-weight: bold;
-        margin-top: 15px;
-      }
-      img {
-        margin: 5px;
-        border-radius: 5px;
-      }
-      .no-content {
-        color: #888;
+      th {
+        background-color: #4CAF50;
+        color: white;
       }
       .action-btn {
         display: inline-block;
-        padding: 10px 15px;
-        margin-top: 15px;
+        padding: 5px 10px;
         border: none;
         border-radius: 3px;
         text-decoration: none;
         cursor: pointer;
+        font-size: 14px;
       }
       .approve-btn {
         background-color: #4CAF50;
@@ -83,6 +72,7 @@ html
       .no-results {
         text-align: center;
         color: #888;
+        margin-top: 20px;
       }
   body
     .container
@@ -92,75 +82,79 @@ html
       .search-bar
         input#searchInput(type="text", placeholder="Search gyms by name...")
 
-      // Gym Listings
-      each gym in gyms
-        .gym-card(data-name=gym.name.toLowerCase())
-          h2= gym.name
-          p Description: #{gym.description}
-          p Location: #{gym.location}
-          p Complete: #{gym.complete}%
-          
-          // Images Section
-          if gym.GymImages && gym.GymImages.length
-            h3.section-title Images
-            each image in gym.GymImages
-              img(src=image.imageUrl, alt="Gym Image", width="100")
-          else
-            p.no-content No images available
-
-          // Equipment Section
-          if gym.Equipment && gym.Equipment.length
-            h3.section-title Equipment
-            each equip in gym.Equipment
-              p= equip.name
-          else
-            p.no-content No equipment available
-
-          // Slots Section
-          if gym.Slots && gym.Slots.length
-            h3.section-title Slots
-            each slot in gym.Slots
-              p= slot.startTime + " - " + slot.price
-          else
-            p.no-content No slots available
-
-          // Subscriptions Section
-          if gym.Subscription && gym.Subscription.length
-            h3.section-title Subscriptions
-            each subscription in gym.Subscription
-              p= subscription.type + ": $" + subscription.price
-          else
-            p.no-content No subscriptions available
-
-          // Approve/Disapprove Button
-          if gym.verified
-            form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")
-              button(type="submit", class="action-btn disapprove-btn") Disapprove
-          else
-            form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
-              button(type="submit", class="action-btn approve-btn") Approve
-
-      // No Results Message (hidden initially)
-      p.no-results#noResultsMessage No gyms found
+      // Gym Table
+      if gyms && gyms.length
+        table
+          thead
+            tr
+              th Name
+              th Description
+              th Location
+              th Complete (%)
+              th Images
+              th Equipment
+              th Slots
+              th Subscriptions
+              th Actions
+          tbody
+            each gym in gyms
+              tr(data-name=gym.name.toLowerCase())
+                td= gym.name
+                td= gym.description
+                td= gym.location
+                td= gym.complete + '%'
+                td
+                  if gym.GymImages && gym.GymImages.length
+                    each image in gym.GymImages
+                      img(src=image.imageUrl, alt="Gym Image", width="50")
+                  else
+                    span No images
+                td
+                  if gym.Equipment && gym.Equipment.length
+                    each equip in gym.Equipment
+                      p= equip.name
+                  else
+                    span No equipment
+                td
+                  if gym.Slots && gym.Slots.length
+                    each slot in gym.Slots
+                      p= slot.startTime + " - $" + slot.price
+                  else
+                    span No slots
+                td
+                  if gym.Subscription && gym.Subscription.length
+                    each subscription in gym.Subscription
+                      p= subscription.type + ": $" + subscription.price
+                  else
+                    span No subscriptions
+                td
+                  if gym.verified
+                    form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")
+                      button(type="submit", class="action-btn disapprove-btn") Disapprove
+                  else
+                    form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
+                      button(type="submit", class="action-btn approve-btn") Approve
+      else
+        p.no-results#noResultsMessage No gyms found
 
     // Script for Search Functionality
     script.
       document.addEventListener("DOMContentLoaded", function () {
         const searchInput = document.getElementById("searchInput");
-        const gymCards = document.querySelectorAll(".gym-card");
+        const tableRows = document.querySelectorAll("tbody tr");
         const noResultsMessage = document.getElementById("noResultsMessage");
 
         searchInput.addEventListener("input", function () {
           const query = searchInput.value.toLowerCase();
           let visibleCount = 0;
 
-          gymCards.forEach(card => {
-            const gymName = card.getAttribute("data-name");
+          tableRows.forEach(row => {
+            const gymName = row.getAttribute("data-name");
             if (gymName.includes(query)) {
-              card.style.display = "block";
+              row.style.display = "table-row";
               visibleCount++;
             } else {
-              card.style.display = "none";
+              row.style.display = "none";
             }
           });
 

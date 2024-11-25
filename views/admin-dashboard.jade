@@ -87,46 +87,30 @@ html
         table
           thead
             tr
+              th Unique Id
               th Name
-              th Description
-              th Location
+              
               th Complete (%)
-              th Images
-              th Equipment
+              
               th Slots
-              th Subscriptions
+           
               th Actions
           tbody
             each gym in gyms
               tr(data-name=gym.name.toLowerCase())
+                td= gym.gym_unique_id
                 td= gym.name
-                td= gym.description
-                td= gym.location
+                
                 td= gym.complete + '%'
-                td
-                  if gym.GymImages && gym.GymImages.length
-                    each image in gym.GymImages
-                      img(src=image.imageUrl, alt="Gym Image", width="50")
-                  else
-                    span No images
-                td
-                  if gym.Equipment && gym.Equipment.length
-                    each equip in gym.Equipment
-                      p= equip.name
-                  else
-                    span No equipment
+                
+                
                 td
                   if gym.Slots && gym.Slots.length
                     each slot in gym.Slots
                       p= slot.startTime + " - $" + slot.price
                   else
                     span No slots
-                td
-                  if gym.Subscription && gym.Subscription.length
-                    each subscription in gym.Subscription
-                      p= subscription.type + ": $" + subscription.price
-                  else
-                    span No subscriptions
+                
                 td
                   if gym.verified
                     form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")

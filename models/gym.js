@@ -55,6 +55,11 @@ module.exports = (sequelize, DataTypes) => {
     complete: {
       type: DataTypes.INTEGER,
       defaultValue: 0
+    },
+    gym_unique_id: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
     }
   });
 
@@ -62,6 +67,11 @@ module.exports = (sequelize, DataTypes) => {
   Gym.beforeCreate(async (gym) => {
     const salt = await bcrypt.genSalt(10);
     gym.password = await bcrypt.hash(gym.password, salt);
+    let uniqueId;
+    do {
+      uniqueId = Math.floor(100000 + Math.random() * 900000).toString();
+    } while (await Gym.findOne({ where: { gym_unique_id: uniqueId } }));
+    gym.gym_unique_id = uniqueId;
   });
 
   Gym.beforeUpdate(async (gym) => {

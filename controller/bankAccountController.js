@@ -73,20 +73,33 @@ exports.updateBankAccount = async (req, res) => {
 
       // Find the existing bank account by gymId
       const bankAccount = await BankAccount.findOne({ where: { gymId } });
-      if (!bankAccount) {
-        return res.status(404).json({ message: 'Bank account not found' });
+
+      if (bankAccount) {
+        // Update the existing bank account
+        await bankAccount.update({
+          bankAccountName,
+          bankAccountNumber,
+          bankIFSC,
+          bankName,
+          bankBranch,
+        });
+
+        return res.status(200).json({ message: 'Bank account updated successfully' });
+      } else {
+        // Create a new bank account
+        const newBankAccount = await BankAccount.create({
+          gymId,
+          bankAccountName,
+          bankAccountNumber,
+          bankIFSC,
+          bankName,
+          bankBranch,
+        });
+
+        return res.status(200).json({ message: 'Bank account created successfully', data: newBankAccount });
       }
 
-      // Update the bank account details
-      await bankAccount.update({
-        bankAccountName,
-        bankAccountNumber,
-        bankIFSC,
-        bankName,
-        bankBranch
-      });
-
-      res.status(200).json(bankAccount);
+      
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });

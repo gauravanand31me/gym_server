@@ -73,7 +73,7 @@ exports.updateBankAccount = async (req, res) => {
 
       // Find the existing bank account by gymId
       const bankAccount = await BankAccount.findOne({ where: { gymId } });
-
+      const id = uuidv4();
       if (bankAccount) {
         // Update the existing bank account
         await bankAccount.update({
@@ -88,6 +88,7 @@ exports.updateBankAccount = async (req, res) => {
       } else {
         // Create a new bank account
         const newBankAccount = await BankAccount.create({
+          id,
           gymId,
           bankAccountName,
           bankAccountNumber,

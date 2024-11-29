@@ -6,7 +6,8 @@ const { Op } = require('sequelize');
 
 exports.updateSlot = async (req, res) => {
     try {
-        const { id, price } = req.body; // Slot ID and the updated price
+        const { id } = req.params;
+        const {  price } = req.body; // Slot ID and the updated price
         const token = req.headers['auth']; // Get JWT token from headers
 
         if (!token) {

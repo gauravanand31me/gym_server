@@ -17,6 +17,7 @@ const { getEquipment } = require('../controller/getEquipment');
 const { addSlot } = require('../controller/addSlots');
 const { getSlots } = require('../controller/getSlots');
 const { deleteSlot } = require('../controller/deleteSlot');
+const { updateSlot } = require('../controller/updateSlot');
 const { getSubscription } = require('../controller/getSubscription');
 const { modifySubscription } = require('../controller/modifySubscription');
 const { getAllEquipmentList } = require('../controller/getAllEquipmentList');
@@ -42,6 +43,7 @@ router.get('/equipment', getEquipment);
 router.post('/slots', addSlot);
 router.get('/slots', getSlots);
 router.delete('/slots/:id', deleteSlot);
+router.put('/slots/:id', updateSlot);
 router.get('/subscriptions', getSubscription);
 router.put('/subscriptions', modifySubscription);
 router.get('/equipments/list', getAllEquipmentList);
@@ -71,7 +73,7 @@ router.get("/admin", (req, res) => {
 router.get("/admin/dashboard", requireAdmin, async (req, res) => {
   const gyms = await adminDashboard();
 
-  
+  console.log("All gyms", gyms);
 
   // Render the Jade template with gyms data
   res.render("admin-dashboard", { gyms });

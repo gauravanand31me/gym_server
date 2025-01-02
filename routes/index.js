@@ -29,6 +29,7 @@ const { adminDashboard } = require('../controller/adminController');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
+
 router.post('/send-verify-link', loginController.sendVerificationLink);
 router.get('/verify-email', loginController.verifyEmailPage);
 router.get('/reset-password', loginController.resetPassword);
@@ -130,6 +131,8 @@ router.post("/admin/login", (req, res) => {
 });
 
 
+
+
 router.post('/auth/verify-token', (req, res) => {
     const token = req.headers['authorization'];
     
@@ -174,20 +177,22 @@ router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, re
     // Get the image URLs from the uploaded files
     const imageUrls = req.files.map(file => file.location); // Assuming `file.location` contains the URL of the uploaded image
 
-    const existingImage = await GymImage.findOne({ where: { gymId } });
+    console.log("All Image urls", imageUrls);
 
-    // If no images exist, increment gym.complete by 10
-    if (!existingImage) {
-        await Gym.increment('complete', { by: 10, where: { id: gymId } });
-    }
+    // const existingImage = await GymImage.findOne({ where: { gymId } });
 
-    // Save each image URL to the database
-    const imagePromises = imageUrls.map(url =>
-      GymImage.create({ id: uuidv4(), imageUrl: url, gymId })
-    );
-    await Promise.all(imagePromises);
+    // // If no images exist, increment gym.complete by 10
+    // if (!existingImage) {
+    //     await Gym.increment('complete', { by: 10, where: { id: gymId } });
+    // }
 
-    res.status(201).json({ message: 'Images uploaded successfully', imageUrls });
+    // // Save each image URL to the database
+    // const imagePromises = imageUrls.map(url =>
+    //   GymImage.create({ id: uuidv4(), imageUrl: url, gymId })
+    // );
+    // await Promise.all(imagePromises);
+
+    // res.status(201).json({ message: 'Images uploaded successfully', imageUrls });
   } catch (error) {
     console.log('Error uploading images:', error);
     res.status(500).json({ error: 'Internal server error' });

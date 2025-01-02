@@ -52,9 +52,12 @@ exports.addSlot = async (req, res) => {
         // Update subscription based on the minimum slot price
         const subscription = await Subscription.findOne({ where: { gymId } });
 
-        const dailyPrice = price; // Daily price is the slot price
+        const minSlotPrice = await Slot.min('price', { where: { gymId } });
+
+        // Calculate subscription prices based on the minimum slot price
+        const dailyPrice = minSlotPrice;
         const monthlyPrice = dailyPrice * 30; // Example: 30x daily price for monthly
-        const yearlyPrice = dailyPrice * 365; // Example: 365x daily price for yearly
+        const yearlyPrice = dailyPrice * 365; // Example: 365x daily price for yearly;
 
         if (!subscription) {
             // Create a new subscription if one doesn't exist
@@ -70,9 +73,9 @@ exports.addSlot = async (req, res) => {
         } else {
             // Update the existing subscription with the new prices
             await subscription.update({
-                daily: Math.min(subscription.daily, dailyPrice),
-                monthly: Math.min(subscription.monthly, monthlyPrice),
-                yearly: Math.min(subscription.yearly, yearlyPrice),
+                daily: dailyPrice,
+                monthly: monthlyPrice,
+                yearly: yearlyPrice,
             });
         }
 

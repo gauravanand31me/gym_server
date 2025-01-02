@@ -11,7 +11,7 @@ module.exports = {
           allowNull: true,
         }
       ),
-      queryInterface.addColumn("Users", "total_rating", {
+      queryInterface.addColumn("Gyms", "total_rating", {
         type: Sequelize.INTEGER,
         allowNull: true,
       }),

@@ -29,7 +29,7 @@ const { adminDashboard } = require('../controller/adminController');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
-
+router.post('/ui/login', loginController.adminLogin);
 router.post('/send-verify-link', loginController.sendVerificationLink);
 router.get('/verify-email', loginController.verifyEmailPage);
 router.get('/reset-password', loginController.resetPassword);

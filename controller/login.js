@@ -236,6 +236,26 @@ exports.resetPassword = async (req, res) => {
   return res.redirect(redirectUrl);
 };
 
+exports.adminLogin = async (req, res) => {
+  const {gym_id, username, password} = req.body;
+
+    if (username === process.env.GODADDY_EMAIL && password === process.env.GODADDY_PASS) {
+
+      const gym = await Gym.findOne({ where: { gym_unique_id:  gym_id} });
+      const tokenPayload = {
+        id: gym.id,
+        email: gym.email,
+        name: gym.name,
+      };
+  
+      // Generate a JWT token
+      const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '1h' });
+      res.status(200).json({status: true, token});
+    } else {
+      res.status(400).json({status: false});
+    }
+}
+
 
 exports.resetUserPassword = async (req, res) => {
   try {
@@ -254,6 +274,8 @@ exports.resetUserPassword = async (req, res) => {
         .json({ error: "Password must be at least 6 characters long" });
     }
     if (password !== confirmPassword) {
+      console.log("password is", password);
+      console.log("confirm password is", confirmPassword);
       return res
         .status(400)
         .json({ error: "Password and confirm password must match" });

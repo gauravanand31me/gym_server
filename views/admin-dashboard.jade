@@ -89,14 +89,23 @@ html
             tr
               th Unique Id
               th Name
+              
               th Complete (%)
+              
+              
+           
               th Actions
           tbody
             each gym in gyms
               tr(data-name=gym.gym_unique_id)
                 td= gym.gym_unique_id
                 td= gym.name
+                
                 td= gym.complete + '%'
+                
+                
+                
+                
                 td
                   if gym.verified
                     form(action=`/gym/api/admin/disapprove/${gym.id}`, method="get")
@@ -104,8 +113,7 @@ html
                   else
                     form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
                       button(type="submit", class="action-btn approve-btn") Approve
-                td
-                  a(href=`https://yupluck.com/admin?gym_unique_id=${gym.gym_unique_id}&token=${token}`, class="action-btn login-btn") Login
+                  
       else
         p.no-results#noResultsMessage No gyms found
 

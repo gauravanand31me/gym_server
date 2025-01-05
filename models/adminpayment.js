@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
 
   AdminPayment.associate = function (models) {
     AdminPayment.belongsTo(models.Gym, {
-      foreignKey: 'gymId',
+      foreignKey: 'gym_id',
       as: 'gym',
     });
   };

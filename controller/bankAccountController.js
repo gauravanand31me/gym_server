@@ -204,7 +204,7 @@ exports.getPayments = async (req, res) => {
 
   try {
       // Decode the JWT token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET);
       const gymId = decoded.id;
 
       // Find the gym by its ID

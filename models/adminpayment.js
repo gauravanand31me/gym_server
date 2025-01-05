@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const AdminPayment = sequelize.define(
-    'AdminPayment',
+    'AdminPayments',
     {
       id: {
         type: DataTypes.UUID,
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: 'AdminPayment', // Explicit table name
+      tableName: 'AdminPayments', // Explicit table name
       timestamps: true, // Enable createdAt and updatedAt
     }
   );

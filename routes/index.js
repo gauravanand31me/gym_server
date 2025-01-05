@@ -76,7 +76,7 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
     const email = process.env.GODADDY_EMAIL;
     const password = process.env.GODADDY_PASSWORD;
 
-    if (!email || !password || !process.env.JWT_SECRET) {
+    if (!email || !password) {
       return res.status(500).send("Required environment variables are not set.");
     }
 

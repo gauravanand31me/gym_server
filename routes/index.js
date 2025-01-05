@@ -83,7 +83,7 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { email, password }, // Payload
-      process.env.JWT_SECRET, // Secret key
+      JWT_SECRET, // Secret key
       { expiresIn: "1h" } // Token expiration
     );
 

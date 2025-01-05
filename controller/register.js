@@ -92,7 +92,7 @@ exports.registerGym = async (req, res) => {
       is_email_verified: false,
       token: verificationToken,
       token_expires: "5m",
-      complete: 10
+      complete: 20
     });
 
     await GymImage.create({

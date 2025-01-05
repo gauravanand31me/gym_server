@@ -114,7 +114,8 @@ html
                   else
                     form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
                       button(type="submit", class="action-btn approve-btn") Approve
-                td= a(href="https://yupluck.com/admin") Login
+                td 
+                  a(href="https://yupluck.com/admin") Login
       else
         p.no-results#noResultsMessage No gyms found
 

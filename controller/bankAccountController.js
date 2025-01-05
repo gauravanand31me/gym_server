@@ -1,6 +1,6 @@
 // controllers/BankAccountController.js
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-const { Gym, BankAccount, AdminPayment} = require('../models');
+const { Gym, BankAccount, AdminPayments} = require('../models');
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
@@ -185,7 +185,7 @@ exports.makePayment = async (req, res) => {
         return res.status(404).json({ error: 'Gym not found' });
     }
 
-  AdminPayment.create({
+  AdminPayments.create({
     gym_id: gymId,
     amount_paid: amount,
   }).then((payment) => console.log(payment));
@@ -214,7 +214,7 @@ exports.getPayments = async (req, res) => {
       }
 
       // Fetch all payments made by the gym
-      const payments = await AdminPayment.findAll({
+      const payments = await AdminPayments.findAll({
           where: { gymId: gymId },
           order: [['createdAt', 'DESC']]  // Optional: You can order by date of payment
       });

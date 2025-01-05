@@ -95,6 +95,7 @@ html
               
            
               th Actions
+              th Login
           tbody
             each gym in gyms
               tr(data-name=gym.gym_unique_id)
@@ -113,7 +114,7 @@ html
                   else
                     form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
                       button(type="submit", class="action-btn approve-btn") Approve
-                  
+                td= Login
       else
         p.no-results#noResultsMessage No gyms found
 

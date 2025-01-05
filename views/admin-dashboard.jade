@@ -1,3 +1,4 @@
+// views/admin-dashboard.pug
 doctype html
 html
   head
@@ -68,18 +69,6 @@ html
       .disapprove-btn:hover {
         background-color: #c0392b;
       }
-      .login-btn {
-        background-color: #3498db;
-        color: #fff;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .login-btn:hover {
-        background-color: #2980b9;
-      }
       .no-results {
         text-align: center;
         color: #888;
@@ -102,6 +91,7 @@ html
               th Name
               
               th Complete (%)
+              
               th Actions
               th Login
           tbody
@@ -119,10 +109,8 @@ html
                   else
                     form(action=`/gym/api/admin/approve/${gym.id}`, method="get")
                       button(type="submit", class="action-btn approve-btn") Approve
-                
-                // Login Button
-                td
-                  a(href=`https://yupluck.com/admin?gym_unique_id=${gym.gym_unique_id}&token=${token}`, class="action-btn login-btn") Login
+                td= a(href=`https://yupluck.com/admin?gym_unique_id=${gym.gym_unique_id}&token=${token}`, class="action-btn login-btn") Login
+                  
       else
         p.no-results#noResultsMessage No gyms found
 

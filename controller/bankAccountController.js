@@ -215,7 +215,7 @@ exports.getPayments = async (req, res) => {
 
       // Fetch all payments made by the gym
       const payments = await AdminPayments.findAll({
-          where: { gymId: gymId },
+          where: { gym_id: gymId },
           order: [['createdAt', 'DESC']]  // Optional: You can order by date of payment
       });
 

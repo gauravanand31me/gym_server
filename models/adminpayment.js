@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
       },
-      gymId: {
+      gym_id: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
-      amountPaid: {
+      amount_paid: {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      paidOn: {
+      paid_on: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,

@@ -195,3 +195,37 @@ exports.makePayment = async (req, res) => {
 
 
 
+exports.getPayments = async (req, res) => {
+  const token = req.headers['auth']; // Get JWT token from headers
+
+  if (!token) {
+      return res.status(401).json({ error: 'No token provided' });
+  }
+
+  try {
+      // Decode the JWT token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const gymId = decoded.id;
+
+      // Find the gym by its ID
+      const gym = await Gym.findByPk(gymId);
+      if (!gym) {
+          return res.status(404).json({ error: 'Gym not found' });
+      }
+
+      // Fetch all payments made by the gym
+      const payments = await AdminPayment.findAll({
+          where: { gymId: gymId },
+          order: [['createdAt', 'DESC']]  // Optional: You can order by date of payment
+      });
+
+      // Return the payments as a response
+      return res.status(200).json({ payments });
+  } catch (error) {
+      console.error('Error fetching payments:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+

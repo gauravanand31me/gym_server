@@ -55,7 +55,7 @@ router.put('/banking/update', BankAccountController.updateBankAccount);
 router.get('/banking/get', BankAccountController.getBankAccount);
 router.post('/banking/send-verification-code', BankAccountController.sendVerificationCode);
 router.post('/banking/make_payment', BankAccountController.makePayment);
-
+router.get('/banking/get_payment', BankAccountController.getPayments);
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
 const requireAdmin = (req, res, next) => {

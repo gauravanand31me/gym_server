@@ -167,10 +167,26 @@ exports.sendVerificationCode = async (req, res) => {
 }
 
 exports.makePayment = async (req, res) => { 
-  const {gym_id, amount} = req.body;
+  const {amount, auth} = req.body;
+
+  const token = req.headers['auth']; // Get JWT token from headers
+
+    if (!token) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+
+    // Decode the JWT token
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    const gymId = decoded.id;
+
+    const gym = await Gym.findByPk(gymId);
+    if (!gym) {
+        return res.status(404).json({ error: 'Gym not found' });
+    }
 
   AdminPayment.create({
-    gymId: gym_id,
+    gymId: gymId,
     amountPaid: amount,
   }).then((payment) => console.log(payment));
 

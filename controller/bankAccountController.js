@@ -186,8 +186,8 @@ exports.makePayment = async (req, res) => {
     }
 
   AdminPayment.create({
-    gymId: gymId,
-    amountPaid: amount,
+    gym_id: gymId,
+    amount_paid: amount,
   }).then((payment) => console.log(payment));
 
   return res.status(200).json({status: true});

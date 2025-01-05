@@ -239,7 +239,11 @@ exports.resetPassword = async (req, res) => {
 exports.adminLogin = async (req, res) => {
   const {gym_id, token} = req.body;
 
+  console.log("Request body", req.body);
+
   const decoded = jwt.verify(token, JWT_SECRET);
+
+  console.log("Decoded", decoded);
 
     if (decoded.email === process.env.GODADDY_EMAIL && decoded.password === process.env.GODADDY_PASS) {
 

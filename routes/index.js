@@ -72,12 +72,31 @@ router.get("/admin", (req, res) => {
 
 
 router.get("/admin/dashboard", requireAdmin, async (req, res) => {
-  const gyms = await adminDashboard();
+  try {
+    const email = process.env.GODADDY_EMAIL;
+    const password = process.env.GODADDY_PASSWORD;
 
-  console.log("All gyms", gyms);
+    if (!email || !password || !process.env.JWT_SECRET) {
+      return res.status(500).send("Required environment variables are not set.");
+    }
 
-  // Render the Jade template with gyms data
-  res.render("admin-dashboard", { gyms });
+    // Generate JWT token
+    const token = jwt.sign(
+      { email, password }, // Payload
+      process.env.JWT_SECRET, // Secret key
+      { expiresIn: "1h" } // Token expiration
+    );
+
+    // Fetch gyms data
+    const gyms = await adminDashboard();
+    console.log("All gyms", gyms);
+
+    // Pass gyms data and token to the Jade/Pug template
+    res.render("admin-dashboard", { gyms, token });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    res.status(500).send("An error occurred while loading the admin dashboard.");
+  }
 });
 
 // Approve gym

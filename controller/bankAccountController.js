@@ -1,6 +1,6 @@
 // controllers/BankAccountController.js
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-const { Gym, BankAccount } = require('../models');
+const { Gym, BankAccount, AdminPayment} = require('../models');
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
@@ -164,6 +164,17 @@ exports.sendVerificationCode = async (req, res) => {
     catch (e) {
 
     }
+}
+
+exports.makePayment = async (req, res) => { 
+  const {gym_id, amount} = req.body;
+
+  AdminPayment.create({
+    gymId: gym_id,
+    amountPaid: amount,
+  }).then((payment) => console.log(payment));
+
+  return res.status(200).json({status: true});
 }
 
 

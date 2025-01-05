@@ -237,9 +237,11 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.adminLogin = async (req, res) => {
-  const {gym_id, email, password} = req.body;
+  const {gym_id, token} = req.body;
 
-    if (email === process.env.GODADDY_EMAIL && password === process.env.GODADDY_PASS) {
+  const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (decoded.email === process.env.GODADDY_EMAIL && decoded.password === process.env.GODADDY_PASS) {
 
       const gym = await Gym.findOne({ where: { gym_unique_id:  gym_id} });
       const tokenPayload = {

@@ -49,6 +49,18 @@ exports.createBankAccount = async (req, res) => {
     }
   }
 
+exports.completeProfile = async (req, res) => {
+  const token = req.headers['auth']; // Get JWT token from headers
+  const decoded = jwt.verify(token, JWT_SECRET);
+  const gymId = decoded.id;
+  const gym = await Gym.findOne({ where: { id: gymId } });
+  gym.update({
+    complete: 100
+  })
+  return res.status(200).json("Updated successfully");
+
+}
+
   // Update the bank account details for a specific gymId
 exports.updateBankAccount = async (req, res) => {
     try {

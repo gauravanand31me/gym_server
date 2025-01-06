@@ -51,6 +51,7 @@ exports.createBankAccount = async (req, res) => {
 
 exports.completeProfile = async (req, res) => {
   const token = req.headers['auth']; // Get JWT token from headers
+  console.log("Token received", token);
   const decoded = jwt.verify(token, JWT_SECRET);
   const gymId = decoded.id;
   const gym = await Gym.findOne({ where: { id: gymId } });

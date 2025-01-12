@@ -50,6 +50,7 @@ exports.disableSlot = async (req, res) => {
     try {
         const { id } = req.params; // Slot ID from request params
         const token = req.headers['auth']; // Get JWT token from headers
+        const disableEnable = parseInt(req.body.enable);
 
         // Check if the token is provided
         if (!token) {
@@ -71,20 +72,15 @@ exports.disableSlot = async (req, res) => {
         }
 
         // Update the `timePeriod` of the slot to 0
-        if (slot.timePeriod !== 0) {
-            await slot.update({ timePeriod: 0 });
+        if (slot.timePeriod !== disableEnable) {
+            await slot.update({ timePeriod: disableEnable });
         }
 
         // Check if there are any remaining active slots (`timePeriod > 0`) for the same gym
-        const existingSlot = await Slot.findOne({ 
-            where: { 
-                gymId: decoded.id, 
-                timePeriod: { [Op.gt]: 0 } 
-            } 
-        });
+        
 
         // If no active slots remain, decrement `complete` by 20 for the gym
-        res.json({ message: 'Slot successfully disabled and timePeriod set to 0' });
+        res.json({ message: `Slot successfully  ${(disableEnable == 0) ? "disabled" : "enabled"}` });
     } catch (error) {
         console.error('Error disabling slot:', error);
         res.status(500).json({ error: 'Internal server error' });

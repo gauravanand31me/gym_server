@@ -45,3 +45,55 @@ exports.deleteSlot = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
+exports.disableSlot = async (req, res) => {
+    try {
+        const { id } = req.params; // Slot ID from request params
+        const token = req.headers['auth']; // Get JWT token from headers
+
+        // Check if the token is provided
+        if (!token) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
+
+        // Verify and decode the JWT token
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Ensure the token contains valid user information
+        if (!decoded || !decoded.id) {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+
+        // Fetch the slot based on the ID
+        const slot = await Slot.findByPk(id);
+        if (!slot) {
+            return res.status(404).json({ error: 'Slot not found' });
+        }
+
+        // Update the `timePeriod` of the slot to 0
+        if (slot.timePeriod !== 0) {
+            await slot.update({ timePeriod: 0 });
+        }
+
+        // Check if there are any remaining active slots (`timePeriod > 0`) for the same gym
+        const existingSlot = await Slot.findOne({ 
+            where: { 
+                gymId: decoded.id, 
+                timePeriod: { [Op.gt]: 0 } 
+            } 
+        });
+
+        // If no active slots remain, decrement `complete` by 20 for the gym
+        if (!existingSlot) {
+            await Gym.increment('complete', { by: -20, where: { id: decoded.id } });
+        }
+
+        res.json({ message: 'Slot successfully disabled and timePeriod set to 0' });
+    } catch (error) {
+        console.error('Error disabling slot:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+

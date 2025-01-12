@@ -89,7 +89,7 @@ html
         const body = document.getElementById('body').value;
 
         try {
-          const response = await axios.post('gym/api/inform', {
+          const response = await axios.post('/gym/api/inform', {
             email, subject, body
           });
           

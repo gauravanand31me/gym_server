@@ -2,9 +2,9 @@ const sendCustomEmail = require("../config/sendCustomEmail");
 
 
 exports.informGymOwner = async (req, res) => {
-  const { email, subject, messageBody } = req.body; // Extract email details from the request body
+  const { email, subject, body } = req.body; // Extract email details from the request body
 
-  if (!email || !subject || !messageBody) {
+  if (!email || !subject || !body) {
     return res.status(400).json({
       success: false,
       message: "Email, subject, and message body are required.",
@@ -13,7 +13,7 @@ exports.informGymOwner = async (req, res) => {
 
   try {
     // Send the email
-    const emailSent = await sendCustomEmail(email, subject, messageBody);
+    const emailSent = await sendCustomEmail(email, subject, body);
 
     if (emailSent) {
       return res.status(200).json({

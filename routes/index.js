@@ -44,7 +44,7 @@ router.get('/equipment', getEquipment);
 router.post('/slots', addSlot);
 router.get('/slots', getSlots);
 router.delete('/slots/:id', deleteSlot);
-router.put('/slots/:id', disableSlot);
+router.put('/slots/disable/:id', disableSlot);
 router.put('/slots/:id', updateSlot);
 router.get('/subscriptions', getSubscription);
 router.put('/subscriptions', modifySubscription);

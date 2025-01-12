@@ -68,7 +68,7 @@ html
           label(for="email") Select Gym Owner
           select(name="email" id="email" required)
             option(value="" disabled selected) Select an email
-            each owner in gymOwners
+            each owner in gyms
               option(value=owner.email) #{owner.name} - #{owner.email}
         div
           label(for="subject") Subject
@@ -89,7 +89,7 @@ html
         const body = document.getElementById('body').value;
 
         try {
-          const response = await axios.post('/gym/api/admin/send-email', {
+          const response = await axios.post('/inform', {
             email, subject, body
           });
           

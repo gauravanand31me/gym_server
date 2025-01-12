@@ -35,9 +35,7 @@ exports.deleteSlot = async (req, res) => {
         const existingSlot = await Slot.findOne({ where: { gymId: decoded.id, timePeriod: { [Op.gt]: 0 } } });
 
         // If no slot exists with timePeriod > 0, decrement gym.complete by 20
-        if (!existingSlot) {
-            await Gym.increment('complete', { by: -20, where: { id: decoded.id } });
-        }
+        
     
         res.json({ message: 'Slot timePeriod updated successfully' });
     } catch (error) {
@@ -86,10 +84,6 @@ exports.disableSlot = async (req, res) => {
         });
 
         // If no active slots remain, decrement `complete` by 20 for the gym
-        if (!existingSlot) {
-            await Gym.increment('complete', { by: -20, where: { id: decoded.id } });
-        }
-
         res.json({ message: 'Slot successfully disabled and timePeriod set to 0' });
     } catch (error) {
         console.error('Error disabling slot:', error);

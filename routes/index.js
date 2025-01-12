@@ -26,6 +26,7 @@ const { getAllBookingsToGym } = require('../controller/getAllBookingGym');
 const { verifyBooking } = require('../controller/verifyBooking');
 const BankAccountController = require('../controller/bankAccountController');
 const { adminDashboard } = require('../controller/adminController');
+const { informGymOwner } = require('../controller/informGymOwner');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -58,6 +59,8 @@ router.post('/banking/send-verification-code', BankAccountController.sendVerific
 router.post('/banking/make_payment', BankAccountController.makePayment);
 router.get('/banking/get_payment', BankAccountController.getPayments);
 router.post('/banking/complete_profile', BankAccountController.completeProfile);
+router.post('/inform', informGymOwner);
+
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 
 const requireAdmin = (req, res, next) => {

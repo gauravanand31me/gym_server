@@ -72,6 +72,9 @@ const requireAdmin = (req, res, next) => {
 };
 
 
+
+
+
 router.get("/admin", (req, res) => {
   res.render("index"); // Renders the 'admin-login' Jade template
 });
@@ -99,6 +102,35 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
 
     // Pass gyms data and token to the Jade/Pug template
     res.render("admin-dashboard", { gyms, token });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    res.status(500).send("An error occurred while loading the admin dashboard.");
+  }
+});
+
+
+router.get("/admin/email", requireAdmin, async (req, res) => {
+  try {
+    const email = process.env.GODADDY_EMAIL;
+    const password = process.env.GODADDY_PASS;
+
+    if (!email || !password) {
+      return res.status(500).send("Required environment variables are not set.");
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { email, password }, // Payload
+      JWT_SECRET, // Secret key
+      { expiresIn: "1h" } // Token expiration
+    );
+
+    // Fetch gyms data
+    const gyms = await adminDashboard();
+    console.log("All gyms", gyms);
+
+    // Pass gyms data and token to the Jade/Pug template
+    res.render("admin-email", { gyms, token });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
     res.status(500).send("An error occurred while loading the admin dashboard.");

@@ -1,0 +1,102 @@
+doctype html
+html
+  head
+    title Admin - Send Email to Gym Owners
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+      }
+      .email-container {
+        width: 500px;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #ffffff;
+        text-align: center;
+      }
+      .email-container h1 {
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        color: #333;
+      }
+      .email-container label {
+        font-size: 0.9rem;
+        color: #555;
+        margin-top: 1rem;
+        display: block;
+      }
+      .email-container select,
+      .email-container input,
+      .email-container textarea {
+        width: 100%;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      .email-container button {
+        width: 100%;
+        padding: 0.5rem;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .email-container button:hover {
+        background-color: #0056b3;
+      }
+      .message {
+        color: red;
+        margin-top: 1rem;
+      }
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+  body
+    .email-container
+      h1 Send Email to Gym Owners
+      form(id="emailForm" action="/gym/api/admin/send-email" method="post")
+        div
+          label(for="email") Select Gym Owner
+          select(name="email" id="email" required)
+            option(value="" disabled selected) Select an email
+            each owner in gymOwners
+              option(value=owner.email) #{owner.name} - #{owner.email}
+        div
+          label(for="subject") Subject
+          input(type="text" name="subject" id="subject" required)
+        div
+          label(for="body") Mail Body
+          textarea(name="body" id="body" rows="4" required)
+        button(type="submit") Send Email
+        div#message(class="message")
+
+    script.
+      // Handle form submission with a POST call
+      document.getElementById('emailForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const body = document.getElementById('body').value;
+
+        try {
+          const response = await axios.post('/gym/api/admin/send-email', {
+            email, subject, body
+          });
+          
+          if (response.status === 200) {
+            alert('Email sent successfully');
+          }
+        } catch (error) {
+          document.getElementById('message').textContent = 'Failed to send email. Please try again later.';
+        }
+      });

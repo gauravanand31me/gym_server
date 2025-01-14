@@ -35,7 +35,8 @@ const sendCustomEmail = async (email, subject, body) => {
   // Mail options
   const mailOptions = {
     from: "Contact@yupluck.com",
-    to: email,
+    to: email, // Recipient's email
+    cc: "Contact@yupluck.com", // Add CC email address(es) here
     subject: subject,
     html: htmlContent,
   };

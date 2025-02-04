@@ -68,9 +68,9 @@ exports.sendVerificationLink = async (req, res) => {
       return res.status(400).json({ error: "A valid email is required" });
     }
 
-    email = email.toLowerCase();
+    
     // Find the gym with the provided email
-    const gym = await Gym.findOne({ where: { email } });
+    const gym = await Gym.findOne({ where: { email: email.toLowerCase() } });
 
     if (!gym) {
       return res.status(404).json({ error: "Gym with this email does not exist" });
@@ -112,9 +112,9 @@ exports.sendPasswordResetLink = async (req, res) => {
       return res.status(400).json({ error: "A valid email is required" });
     }
 
-    email = email.toLowerCase();
+    
     // Find the gym with the provided email
-    const gym = await Gym.findOne({ where: { email } });
+    const gym = await Gym.findOne({ where: { email: email.toLowerCase() } });
 
     if (!gym) {
       return res.status(404).json({ error: "Gym with this email does not exist" });
@@ -307,7 +307,7 @@ exports.adminLogin = async (req, res) => {
 
 exports.resetUserPassword = async (req, res) => {
   try {
-    const { email, token, password, confirmPassword } = req.body;
+    let { email, token, password, confirmPassword } = req.body;
 
     // Validate input
     if (!email || !email.includes("@")) {
@@ -330,8 +330,8 @@ exports.resetUserPassword = async (req, res) => {
     }
 
     // Check if the gym exists and if the token matches
-    email = email.toLowerCase()
-    const gym = await Gym.findOne({ where: { email } });
+    
+    const gym = await Gym.findOne({ where: { email: email.toLowerCase() } });
 
     if (!gym) {
       return res.status(404).json({ error: "Gym not found" });

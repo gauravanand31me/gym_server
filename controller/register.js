@@ -76,7 +76,7 @@ exports.registerGym = async (req, res) => {
 
     // Create Gym entry
     const gym = await Gym.create({
-      email,
+      email: email.toLowerCase(),
       password,
       name,
       description,

@@ -67,7 +67,7 @@ exports.registerGym = async (req, res) => {
     console.log("Register Password", password);
 
     // Check if gym with this email already exists
-    const existingGym = await Gym.findOne({ where: { email } });
+    const existingGym = await Gym.findOne({ where: { email: email.toLowerCase() } });
     if (existingGym) {
       return res
         .status(409)

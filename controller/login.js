@@ -149,9 +149,21 @@ exports.verifyEmailPage = async (req, res) => {
     if (!token || !email || !email.includes("@")) {
       return res.send(`
         <html>
+          <head>
+            <title>Email Verification</title>
+            <style>
+              body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
+              .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); display: inline-block; }
+              h1 { color: #333; }
+              p { font-size: 16px; }
+              .error { color: red; }
+            </style>
+          </head>
           <body>
-            <h1>Email Verification</h1>
-            <p style="color: red;">Invalid or missing token and email.</p>
+            <div class="container">
+              <h1>Email Verification</h1>
+              <p class="error">Invalid or missing token and email.</p>
+            </div>
           </body>
         </html>
       `);
@@ -163,9 +175,14 @@ exports.verifyEmailPage = async (req, res) => {
     if (!gym) {
       return res.send(`
         <html>
+          <head>
+            <title>Email Verification</title>
+          </head>
           <body>
-            <h1>Email Verification</h1>
-            <p style="color: red;">No gym found with this email.</p>
+            <div class="container">
+              <h1>Email Verification</h1>
+              <p class="error">No gym found with this email.</p>
+            </div>
           </body>
         </html>
       `);
@@ -174,12 +191,15 @@ exports.verifyEmailPage = async (req, res) => {
     // Check if the token matches and if it has expired
     const currentTime = new Date();
     const tokenExpires = currentTime.setMinutes(currentTime.getMinutes() + 5);
+    
     if (gym.token !== token) {
       return res.send(`
         <html>
           <body>
-            <h1>Email Verification</h1>
-            <p style="color: red;">Invalid token.</p>
+            <div class="container">
+              <h1>Email Verification</h1>
+              <p class="error">Invalid token.</p>
+            </div>
           </body>
         </html>
       `);
@@ -189,8 +209,10 @@ exports.verifyEmailPage = async (req, res) => {
       return res.send(`
         <html>
           <body>
-            <h1>Email Verification</h1>
-            <p style="color: red;">Token has expired. Please request a new verification email.</p>
+            <div class="container">
+              <h1>Email Verification</h1>
+              <p class="error">Token has expired. Please request a new verification email.</p>
+            </div>
           </body>
         </html>
       `);
@@ -205,10 +227,19 @@ exports.verifyEmailPage = async (req, res) => {
 
     return res.send(`
       <html>
+        <head>
+          <title>Email Verification</title>
+          <style>
+            .success { color: green; }
+            .btn { background-color: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }
+          </style>
+        </head>
         <body>
-          <h1>Email Verification</h1>
-          <p style="color: green;">Your email has been successfully verified!</p>
-          <a href="https://yupluck.com/login">Go to Login</a>
+          <div class="container">
+            <h1>Email Verification</h1>
+            <p class="success">Your email has been successfully verified!</p>
+            <a class="btn" href="https://yupluck.com/login">Go to Login</a>
+          </div>
         </body>
       </html>
     `);
@@ -217,13 +248,16 @@ exports.verifyEmailPage = async (req, res) => {
     return res.send(`
       <html>
         <body>
-          <h1>Email Verification</h1>
-          <p style="color: red;">An error occurred while verifying your email. Please try again later.</p>
+          <div class="container">
+            <h1>Email Verification</h1>
+            <p class="error">An error occurred while verifying your email. Please try again later.</p>
+          </div>
         </body>
       </html>
     `);
   }
 };
+
 
 exports.resetPassword = async (req, res) => {
   // Get the query parameters from the request

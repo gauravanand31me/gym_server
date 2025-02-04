@@ -68,6 +68,7 @@ exports.sendVerificationLink = async (req, res) => {
       return res.status(400).json({ error: "A valid email is required" });
     }
 
+    email = email.toLowerCase();
     // Find the gym with the provided email
     const gym = await Gym.findOne({ where: { email } });
 
@@ -111,6 +112,7 @@ exports.sendPasswordResetLink = async (req, res) => {
       return res.status(400).json({ error: "A valid email is required" });
     }
 
+    email = email.toLowerCase();
     // Find the gym with the provided email
     const gym = await Gym.findOne({ where: { email } });
 

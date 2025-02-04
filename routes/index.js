@@ -61,6 +61,7 @@ router.get('/banking/get_payment', BankAccountController.getPayments);
 router.post('/banking/complete_profile', BankAccountController.completeProfile);
 router.post('/inform', informGymOwner);
 router.post('/resetpassword', loginController.resetExtPassword);
+router.post('/resetemail', loginController.resetExtEmail);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 

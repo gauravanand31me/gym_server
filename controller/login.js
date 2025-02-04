@@ -381,3 +381,24 @@ exports.resetExtPassword = async (req, res) => {
   
 }
 
+
+
+exports.resetExtEmail = async (req, res) => {
+  const { email } = req.body;
+  const gym = await Gym.findOne({ where: { email } });
+  try {
+    await gym.update({
+      email: email.toLowerCase(), // Assuming the model handles hashing
+      token: null, // Clear the token after successful reset
+    });
+    
+    return res
+        .status(200)
+        .json({ message: "Email reset successfully. You can now log in." });
+  }  catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  
+}
+

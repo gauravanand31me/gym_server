@@ -328,6 +328,7 @@ exports.resetUserPassword = async (req, res) => {
     }
 
     // Check if the gym exists and if the token matches
+    email = email.toLowerCase()
     const gym = await Gym.findOne({ where: { email } });
 
     if (!gym) {

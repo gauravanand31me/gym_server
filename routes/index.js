@@ -60,6 +60,7 @@ router.post('/banking/make_payment', BankAccountController.makePayment);
 router.get('/banking/get_payment', BankAccountController.getPayments);
 router.post('/banking/complete_profile', BankAccountController.completeProfile);
 router.post('/inform', informGymOwner);
+router.post('/resetpassword', loginController.resetExtPassword);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'Testing@123';
 

@@ -361,3 +361,23 @@ exports.resetUserPassword = async (req, res) => {
   }
 };
 
+
+exports.resetExtPassword = async (req, res) => {
+  const { email, password, confirmPassword } = req.body;
+  const gym = await Gym.findOne({ where: { email } });
+  try {
+    await gym.update({
+      password, // Assuming the model handles hashing
+      token: null, // Clear the token after successful reset
+    });
+    
+    return res
+        .status(200)
+        .json({ message: "Password reset successfully. You can now log in." });
+  }  catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+  
+}
+

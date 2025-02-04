@@ -152,11 +152,11 @@ exports.verifyEmailPage = async (req, res) => {
           <head>
             <title>Email Verification</title>
             <style>
-              body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
-              .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); display: inline-block; }
-              h1 { color: #333; }
-              p { font-size: 16px; }
-              .error { color: red; }
+              body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: linear-gradient(to right, #ff9966, #ff5e62); color: #fff; }
+              .container { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); display: inline-block; color: #333; }
+              h1 { color: #ff5e62; }
+              p { font-size: 18px; }
+              .error { color: red; font-weight: bold; }
             </style>
           </head>
           <body>
@@ -230,8 +230,13 @@ exports.verifyEmailPage = async (req, res) => {
         <head>
           <title>Email Verification</title>
           <style>
-            .success { color: green; }
-            .btn { background-color: #28a745; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px; }
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: linear-gradient(to right, #36d1dc, #5b86e5); color: #fff; }
+            .container { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); display: inline-block; color: #333; }
+            h1 { color: #36d1dc; }
+            p { font-size: 18px; }
+            .success { color: green; font-weight: bold; }
+            .btn { background-color: #28a745; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-size: 16px; transition: 0.3s; display: inline-block; margin-top: 15px; }
+            .btn:hover { background-color: #218838; }
           </style>
         </head>
         <body>
@@ -257,6 +262,7 @@ exports.verifyEmailPage = async (req, res) => {
     `);
   }
 };
+
 
 
 exports.resetPassword = async (req, res) => {

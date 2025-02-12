@@ -41,6 +41,39 @@ html
       tr:hover {
         background-color: #ddd;
       }
+      textarea {
+        width: 100%;
+        height: 80px;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        resize: none;
+      }
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+      .all-numbers {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #eef;
+        border-radius: 5px;
+        font-weight: bold;
+        color: #333;
+        word-wrap: break-word;
+        font-size: 14px;
+        text-align: left;
+      }
   body
     .container
       h1 User List
@@ -56,3 +89,33 @@ html
               td #{index + 1}
               td #{user.userFullName}
               td #{user.userMobileNumber}
+
+      h2 All User Mobile Numbers
+      .all-numbers #{users.map(u => u.userMobileNumber).join(", ")}
+
+      form#smsForm
+        textarea#message(placeholder="Enter your SMS message here...")
+        button(type="button" onclick="sendSMS()") Send SMS
+
+    script.
+      function sendSMS() {
+        const message = document.getElementById('message').value;
+        if (!message.trim()) {
+          alert('Please enter a message before sending.');
+          return;
+        }
+
+        fetch('/admin/send-sms', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message,
+            numbers: !{JSON.stringify(users.map(u => u.userMobileNumber))} // Passing all mobile numbers
+          })
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(error => alert('Error sending SMS'));
+      }

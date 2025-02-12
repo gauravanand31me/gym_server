@@ -172,7 +172,7 @@ router.get("/admin/users/get", requireAdmin, async (req, res) => {
     `;
 
     const users = await sequelize.query(query, {
-      type: Sequelize.QueryTypes.SELECT
+      type: sequelize.QueryTypes.SELECT
     });
 
     return res.status(200).json({ success: true, data: users });

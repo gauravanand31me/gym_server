@@ -175,7 +175,7 @@ router.get("/admin/users/get", requireAdmin, async (req, res) => {
       type: sequelize.QueryTypes.SELECT
     });
 
-    return res.status(200).json({ success: true, data: users });
+    return res.render("users", {users})
   } catch (error) {
     console.error('Error fetching users:', error);
     return res.status(500).json({ success: false, message: 'Internal Server Error' });

@@ -28,6 +28,7 @@ const { verifyBooking } = require('../controller/verifyBooking');
 const BankAccountController = require('../controller/bankAccountController');
 const { adminDashboard } = require('../controller/adminController');
 const { informGymOwner } = require('../controller/informGymOwner');
+const { sendSMS } = require('../config/sendSMS');
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -182,6 +183,14 @@ router.get("/admin/users/get", requireAdmin, async (req, res) => {
   }
 });
 
+
+router.post('/admin/send-sms', async (req, res) => {
+  const { message, numbers} = req.body;
+  for (const number of numbers) {
+    await sendSMS("+91"+number, message);
+  }
+  return res.json({ success: true, message: "SMS sent successfully to all users!" });
+});
 // Disapprove gym
 router.get('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
   try {

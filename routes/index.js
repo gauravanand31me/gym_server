@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const { GymImage, Gym } = require('../models'); // Adjust the path as needed
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
+const {sequelize} = require("../models/index");
 const loginController = require('../controller/login');
 const registerController = require('../controller/register');
 const fetchController = require('../controller/fetchGym');
@@ -158,6 +159,29 @@ router.get('/admin/approve/:gymId', requireAdmin, async (req, res) => {
   }
 });
 
+
+router.get("/admin/users/get", requireAdmin, async (req, res) => {
+  try {
+    const query = `
+        SELECT 
+            "Users".id AS "userId",
+            "Users".full_name AS "userFullName",
+            "Users".mobile_number AS "userMobileNumber"
+        FROM "Users"
+        ORDER BY "Users".full_name ASC;
+    `;
+
+    const users = await sequelize.query(query, {
+      type: Sequelize.QueryTypes.SELECT
+    });
+
+    return res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+});
+
 // Disapprove gym
 router.get('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
   try {
@@ -178,34 +202,34 @@ router.get('/admin/disapprove/:gymId', requireAdmin, async (req, res) => {
 });
 
 router.post("/admin/login", (req, res) => {
-    const {username, password} = req.body;
+  const { username, password } = req.body;
 
-    if (username === process.env.GODADDY_EMAIL && password === process.env.GODADDY_PASS) {
+  if (username === process.env.GODADDY_EMAIL && password === process.env.GODADDY_PASS) {
 
-      req.session.isAdmin = true;
-      res.status(200).json({status: true});
-    } else {
-      res.status(400).json({status: false});
-    }
+    req.session.isAdmin = true;
+    res.status(200).json({ status: true });
+  } else {
+    res.status(400).json({ status: false });
+  }
 });
 
 
 
 
 router.post('/auth/verify-token', (req, res) => {
-    const token = req.headers['authorization'];
-    
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
+  const token = req.headers['authorization'];
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token is invalid or expired' });
     }
-  
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ message: 'Token is invalid or expired' });
-      }
-      // If token is valid, return a success response
-      res.status(200).json({ message: 'Token is valid', decoded });
-    });
+    // If token is valid, return a success response
+    res.status(200).json({ message: 'Token is valid', decoded });
+  });
 })
 
 
@@ -224,11 +248,11 @@ const verifyJWT = (req, res, next) => {
 };
 
 // API to upload multiple images for a gym
-router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, res) => { 
+router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, res) => {
   // Accept up to 10 images; adjust the limit as needed
   try {
     const { gymId } = req;
-    
+
     // Ensure gym exists
     const gym = await Gym.findByPk(gymId);
     if (!gym) return res.status(404).json({ error: 'Gym not found' });
@@ -236,31 +260,31 @@ router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, re
     // Get the image URLs from the uploaded files
     const imageUrls = req.files.map(file => file.location); // Assuming `file.location` contains the URL of the uploaded image
 
-   
+
 
     const existingImage = await GymImage.findOne({ where: { gymId } });
 
     // If no images exist, increment gym.complete by 10
     if (!existingImage) {
-        await Gym.increment('complete', { by: 10, where: { id: gymId } });
+      await Gym.increment('complete', { by: 10, where: { id: gymId } });
     }
 
     // Save each image URL to the database
     const imagePromises = imageUrls.map(async (url) => {
       // Check if the image already exists for the gym
       const existingImage = await GymImage.findOne({
-          where: { imageUrl: url, gymId },
+        where: { imageUrl: url, gymId },
       });
 
       if (!existingImage) {
-          // Create a new image entry if it doesn't exist
-          return GymImage.create({ id: uuidv4(), imageUrl: url, gymId });
+        // Create a new image entry if it doesn't exist
+        return GymImage.create({ id: uuidv4(), imageUrl: url, gymId });
       }
 
       // Return null or any value to indicate no action was taken
       return null;
     });
-    
+
     await Promise.all(imagePromises);
 
     res.status(201).json({ message: 'Images uploaded successfully', imageUrls });

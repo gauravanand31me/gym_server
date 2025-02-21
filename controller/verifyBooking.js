@@ -14,11 +14,24 @@ exports.verifyBooking = async (req, res) => {
     }
 
 
-console.log("Decoded Value received", decoded);
+
 
   try {
     const { bookingId } = req.query;
 
+
+    const currentDate = moment().format('YYYY-MM-DD');
+    const bookingDate = moment(booking.bookingDate).format('YYYY-MM-DD');
+
+    const date = new Date(bookingDate);
+    date.setHours(date.getHours() + 5, date.getMinutes() + 30);
+    
+
+    const cur_date = new Date(currentDate);
+    cur_date.setHours(cur_date.getHours() + 5, cur_date.getMinutes() + 30);
+    
+
+    
     // Step 1: Fetch the booking details by bookingId using raw SQL
     const [booking] = await sequelize.query(
       'SELECT * FROM "Booking" WHERE "stringBookingId" = :bookingId AND "gymId" = :gymId',
@@ -33,25 +46,26 @@ console.log("Decoded Value received", decoded);
       return res.status(404).json({ message: 'Booking not found For this gym' });
     }
 
+
+    if (moment(currentDate).isAfter(moment(bookingDate)) && booking.type === "daily") {
+      await sequelize.query(
+        'UPDATE "Booking" SET "isCheckedIn" = false WHERE "stringBookingId" = :bookingId',
+        {
+          replacements: { bookingId },
+          type: sequelize.QueryTypes.UPDATE,
+        }
+      );
+    }
+
     if (booking.isCheckedIn) {
         console.log("Already came");
         return res.status(400).json({ message: 'Booking has already been checked in' });
     }
 
     // Step 2: Check if the booking date matches the current date
-    const currentDate = moment().format('YYYY-MM-DD');
-    const bookingDate = moment(booking.bookingDate).format('YYYY-MM-DD');
+   
 
-    const date = new Date(bookingDate);
-    date.setHours(date.getHours() + 5, date.getMinutes() + 30);
-    const formattedDate = date.toISOString().slice(0, 10);
-
-    const cur_date = new Date(currentDate);
-    cur_date.setHours(cur_date.getHours() + 5, cur_date.getMinutes() + 30);
-    const formattedCurrentDate = cur_date.toISOString().slice(0, 10);
-
-    console.log("currentDate", formattedCurrentDate);
-    console.log("bookingDate", formattedDate);
+    
     // if (formattedCurrentDate !== formattedDate) {
     //   return res.status(400).json({ message: 'Booking is not for today' });
     // }

@@ -56,6 +56,7 @@ exports.verifyBooking = async (req, res) => {
         }
       );
     }
+    
 
     if (booking.isCheckedIn) {
         console.log("Already came");

@@ -47,7 +47,7 @@ exports.verifyBooking = async (req, res) => {
     }
 
 
-    if (moment(currentDate).isAfter(moment(bookingDate)) && booking.type === "daily") {
+    if (moment(currentDate).isAfter(moment(bookingDate)) && booking.type === "monthly") {
       await sequelize.query(
         'UPDATE "Booking" SET "isCheckedIn" = false WHERE "stringBookingId" = :bookingId',
         {

@@ -34,7 +34,7 @@ exports.modifySubscription = async (req, res) => {
         // Fetch all equipment for the gym
     
        
-            const { dailyPrice, monthlyPrice, yearlyPrice } = req.body;
+            const { dailyPrice, monthlyPrice, yearlyPrice, halfYearly, quarterly } = req.body;
         
             // Validate input
             if (dailyPrice === undefined || monthlyPrice === undefined || yearlyPrice === undefined) {
@@ -52,6 +52,8 @@ exports.modifySubscription = async (req, res) => {
                     daily: dailyPrice,
                     monthly: monthlyPrice,
                     yearly: yearlyPrice,
+                    halfYearly,
+                    quarterly,
                     gymId
                 });
 

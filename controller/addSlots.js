@@ -70,13 +70,6 @@ exports.addSlot = async (req, res) => {
             });
 
             await Gym.increment('complete', { by: 20, where: { id: gymId } });
-        } else {
-            // Update the existing subscription with the new prices
-            await subscription.update({
-                daily: dailyPrice,
-                monthly: monthlyPrice,
-                yearly: yearlyPrice,
-            });
         }
 
         res.status(201).json({ message: 'Slot added and subscription updated successfully' });

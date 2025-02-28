@@ -3,6 +3,8 @@ module.exports = (sequelize, DataTypes) => {
       daily: DataTypes.DECIMAL(10, 2),
       monthly: DataTypes.DECIMAL(10, 2),
       yearly: DataTypes.DECIMAL(10, 2),
+      quarterly: DataTypes.DECIMAL(10, 2),      // <-- Add this
+      halfYearly: DataTypes.DECIMAL(10, 2),     // <-- Add this
     });
   
     Subscription.associate = (models) => {

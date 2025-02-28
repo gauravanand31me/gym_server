@@ -63,8 +63,8 @@ exports.modifySubscription = async (req, res) => {
                     daily: dailyPrice,
                     monthly: monthlyPrice,
                     yearly: yearlyPrice,
-                    halfYearly,
-                    quarterly
+                    halfYearly: halfYearlyPrice,
+                    quarterly: quarterlyPrice
                   });
             }
         

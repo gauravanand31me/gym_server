@@ -62,9 +62,9 @@ exports.verifyBooking = async (req, res) => {
 
             // Insert a new check-in for today
             await sequelize.query(
-                'INSERT INTO "BookingCheckins" ("bookingId", "checkinDate") VALUES (:bookingId, :today)',
+                'INSERT INTO "BookingCheckins" ("bookingId", "checkinDate", "duration") VALUES (:bookingId, :today, :duration)',
                 {
-                    replacements: { bookingId: booking.stringBookingId, today },
+                    replacements: { bookingId: booking.stringBookingId, today, duration: booking.duration },
                     type: sequelize.QueryTypes.INSERT,
                 }
             );

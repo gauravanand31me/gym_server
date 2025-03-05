@@ -49,7 +49,7 @@ exports.verifyBooking = async (req, res) => {
         if (booking.type !== 'daily') {
             // Check if there's already a check-in for today
             const [existingCheckIn] = await sequelize.query(
-                'SELECT * FROM "BookingCheckins" WHERE "bookingId" = :bookingId AND "checkInDate" = :today',
+                'SELECT * FROM "BookingCheckins" WHERE "bookingId" = :bookingId AND "checkinDate" = :today',
                 {
                     replacements: { bookingId: booking.stringBookingId, today },
                     type: sequelize.QueryTypes.SELECT,
@@ -62,7 +62,7 @@ exports.verifyBooking = async (req, res) => {
 
             // Insert a new check-in for today
             await sequelize.query(
-                'INSERT INTO "BookingCheckins" ("bookingId", "checkInDate") VALUES (:bookingId, :today)',
+                'INSERT INTO "BookingCheckins" ("bookingId", "checkinDate") VALUES (:bookingId, :today)',
                 {
                     replacements: { bookingId: booking.stringBookingId, today },
                     type: sequelize.QueryTypes.INSERT,

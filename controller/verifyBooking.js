@@ -46,41 +46,32 @@ exports.verifyBooking = async (req, res) => {
         const today = new Date().toISOString().split('T')[0];  // This gives "YYYY-MM-DD"
 
         // For non-daily bookings (monthly, quarterly, etc.)
-        if (booking.type !== 'daily') {
-            // Check if there's already a check-in for today
-            const [existingCheckIn] = await sequelize.query(
-                'SELECT * FROM "BookingCheckins" WHERE "bookingId" = :bookingId AND "checkinDate" = :today',
-                {
-                    replacements: { bookingId: booking.stringBookingId, today },
-                    type: sequelize.QueryTypes.SELECT,
-                }
-            );
 
-            if (existingCheckIn) {
-                return res.status(400).json({ message: 'User already checked in today' });
+        // Check if there's already a check-in for today
+        const [existingCheckIn] = await sequelize.query(
+            'SELECT * FROM "BookingCheckins" WHERE "bookingId" = :bookingId AND "checkinDate" = :today',
+            {
+                replacements: { bookingId: booking.stringBookingId, today },
+                type: sequelize.QueryTypes.SELECT,
             }
+        );
 
-            // Insert a new check-in for today
-            await sequelize.query(
-                'INSERT INTO "BookingCheckins" ("bookingId", "checkinDate", "duration") VALUES (:bookingId, :today, :duration)',
-                {
-                    replacements: { bookingId: booking.stringBookingId, today, duration: booking.duration },
-                    type: sequelize.QueryTypes.INSERT,
-                }
-            );
-
-            // Update user total workout time
-            const newTotalWorkoutTime = user.total_work_out_time + booking.duration;
-            await sequelize.query(
-                'UPDATE "Users" SET total_work_out_time = :totalWorkoutTime WHERE id = :userId',
-                {
-                    replacements: { totalWorkoutTime: newTotalWorkoutTime, userId: booking.userId },
-                    type: sequelize.QueryTypes.UPDATE,
-                }
-            );
-
-            return res.send("User successfully verified for today");
+        if (existingCheckIn) {
+            return res.status(400).json({ message: 'User already checked in today' });
         }
+
+        // Insert a new check-in for today
+        await sequelize.query(
+            'INSERT INTO "BookingCheckins" ("bookingId", "checkinDate", "duration") VALUES (:bookingId, :today, :duration)',
+            {
+                replacements: { bookingId: booking.stringBookingId, today, duration: booking.duration },
+                type: sequelize.QueryTypes.INSERT,
+            }
+        );
+
+        // Update user total workout time
+
+
 
         // For daily bookings
         if (booking.isCheckedIn) {
@@ -97,13 +88,41 @@ exports.verifyBooking = async (req, res) => {
             }
         );
 
-        await sequelize.query(
-            'UPDATE "Booking" SET "isCheckedIn" = true WHERE "stringBookingId" = :bookingId',
-            {
-                replacements: { bookingId },
-                type: sequelize.QueryTypes.UPDATE,
+
+        if (booking.type === "daily") {
+            await sequelize.query(
+                'UPDATE "Booking" SET "isCheckedIn" = true WHERE "stringBookingId" = :bookingId',
+                {
+                    replacements: { bookingId },
+                    type: sequelize.QueryTypes.UPDATE,
+                }
+            );
+        } else {
+            const timeFrames = {
+                monthly: 1,
+                quarterly: 3,
+                halfyearly: 6,
+                yearly: 12,
+            };
+
+            if (timeFrames[booking.type]) {
+                const requiredDate = new Date(booking.bookingDate);
+                requiredDate.setMonth(requiredDate.getMonth() + timeFrames[booking.type]);
+
+                const currentDate = new Date();
+
+                if (currentDate >= requiredDate) {
+                    await sequelize.query(
+                        'UPDATE "Booking" SET "isCheckedIn" = true WHERE "stringBookingId" = :bookingId',
+                        {
+                            replacements: { bookingId },
+                            type: sequelize.QueryTypes.UPDATE,
+                        }
+                    );
+                }
             }
-        );
+        }
+
 
         res.send("User successfully verified");
     } catch (error) {

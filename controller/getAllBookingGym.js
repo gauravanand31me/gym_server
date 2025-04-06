@@ -81,7 +81,7 @@ exports.getAllBookingsToGym = async (req, res) => {
           "Booking"."userId" AS "userId",
           "Users".full_name AS "userFullName",
           "Users".mobile_number AS "userMobileNumber",
-          "Booking"."stringBookingId" AS AS "bookingId",
+          "Booking"."stringBookingId" AS "bookingId",
           "Booking"."bookingDate",
           "Booking"."isCheckedIn" AS "visited",
           "Booking".price AS "subscriptionPrice",

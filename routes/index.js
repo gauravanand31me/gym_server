@@ -132,7 +132,7 @@ router.get("/admin/coupons", requireAdmin, async (req, res) => {
     );
 
     // Fetch all coupons
-    const coupons = await Coupon.findAll({ order: [['createdAt', 'DESC']] });
+    const coupons = await Coupon.findAll({ order: [['created_at', 'DESC']] });
 
     // Render to a Pug template
     res.render("admin-coupons", { coupons, token });

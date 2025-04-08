@@ -1,0 +1,67 @@
+doctype html
+html
+  head
+    title Attach Coupon to Gym
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        padding: 30px;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      label, select, button {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+      }
+      select, button {
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .message {
+        text-align: center;
+        margin-top: 10px;
+        color: green;
+      }
+  body
+    .container
+      h2 Attach Coupon to Gym
+
+      if message
+        .message= message
+
+      form(method="POST", action="/admin/coupons/attach")
+        label(for="gym_id") Select Gym:
+        select(name="gym_id", required)
+          option(value="") -- Select Gym --
+          each gym in gyms
+            option(value=gym.id)= gym.name + ' (' + gym.gym_unique_id + ')'
+
+        label(for="coupon_id") Select Coupon:
+        select(name="coupon_id", required)
+          option(value="") -- Select Coupon --
+          each coupon in coupons
+            option(value=coupon.id)= coupon.coupon_code + ' (' + coupon.discount_type + ' - ' + coupon.discount_amount + ')'
+
+        button(type="submit") Attach Coupon

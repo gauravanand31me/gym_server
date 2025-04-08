@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const { GymImage, Gym, Coupon } = require('../models'); // Adjust the path as needed
+const { GymImage, Gym, Coupon, CouponGymMap } = require('../models'); // Adjust the path as needed
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const {sequelize} = require("../models/index");
@@ -29,6 +29,7 @@ const BankAccountController = require('../controller/bankAccountController');
 const { adminDashboard } = require('../controller/adminController');
 const { informGymOwner } = require('../controller/informGymOwner');
 const { sendSMS } = require('../config/sendSMS');
+
 
 
 router.post('/register', registerController.registerGym);
@@ -140,6 +141,47 @@ router.get("/admin/coupons", requireAdmin, async (req, res) => {
   } catch (error) {
     console.error("Error fetching coupons:", error);
     res.status(500).send("An error occurred while loading coupon data.");
+  }
+});
+
+
+router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
+  try {
+    const email = process.env.GODADDY_EMAIL;
+    const password = process.env.GODADDY_PASS;
+
+    const token = jwt.sign({ email, password }, JWT_SECRET, { expiresIn: "1h" });
+
+    const gyms = await adminDashboard();       // List of gyms
+    const coupons = await Coupon.findAll();    // List of coupons
+
+    res.render("admin-attach-coupon", { gyms, coupons, token, message: null });
+  } catch (error) {
+    console.error("Error loading attach form:", error);
+    res.status(500).send("Error loading form.");
+  }
+});
+
+
+router.post("/admin/coupons/attach", requireAdmin, async (req, res) => {
+  const { gym_id, coupon_id } = req.body;
+
+  try {
+    // Avoid duplicate mapping
+    const existing = await CouponGymMap.findOne({ where: { gym_id, coupon_id } });
+
+    if (!existing) {
+      await CouponGymMap.create({ gym_id, coupon_id });
+    }
+
+    const gyms = await adminDashboard();
+    const coupons = await Coupon.findAll();
+    const message = existing ? "Already attached!" : "Coupon successfully attached to gym!";
+
+    res.render("admin-attach-coupon", { gyms, coupons, token: req.token, message });
+  } catch (error) {
+    console.error("Error attaching coupon:", error);
+    res.status(500).send("Failed to attach coupon.");
   }
 });
 

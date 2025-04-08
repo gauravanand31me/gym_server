@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.createTable('coupons', {
       id: {
         type: Sequelize.UUID,
-        autoIncrement: true,
+        defaultValue: Sequelize.UUIDV4, // or Sequelize.UUIDV4 if generating in app
         primaryKey: true
       },
       coupon_code: {

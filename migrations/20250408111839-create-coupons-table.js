@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('coupons', {
       id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         autoIncrement: true,
         primaryKey: true
       },
@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false
       },
       gym_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         references: {
           model: 'Gyms', // assumes a 'gyms' table already exists
           key: 'id'

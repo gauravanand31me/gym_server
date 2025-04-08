@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const { GymImage, Gym } = require('../models'); // Adjust the path as needed
+const { GymImage, Gym, Coupon } = require('../models'); // Adjust the path as needed
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const {sequelize} = require("../models/index");
@@ -29,6 +29,7 @@ const BankAccountController = require('../controller/bankAccountController');
 const { adminDashboard } = require('../controller/adminController');
 const { informGymOwner } = require('../controller/informGymOwner');
 const { sendSMS } = require('../config/sendSMS');
+
 
 router.post('/register', registerController.registerGym);
 router.post('/login', loginController.login);
@@ -103,13 +104,42 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
 
     // Fetch gyms data
     const gyms = await adminDashboard();
-    console.log("All gyms", gyms);
+    
 
     // Pass gyms data and token to the Jade/Pug template
     res.render("admin-dashboard", { gyms, token });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
     res.status(500).send("An error occurred while loading the admin dashboard.");
+  }
+});
+
+
+
+router.get("/admin/coupons", requireAdmin, async (req, res) => {
+  try {
+    const email = process.env.GODADDY_EMAIL;
+    const password = process.env.GODADDY_PASS;
+
+    if (!email || !password) {
+      return res.status(500).send("Required environment variables are not set.");
+    }
+
+    const token = jwt.sign(
+      { email, password },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Fetch all coupons
+    const coupons = await Coupon.findAll({ order: [['createdAt', 'DESC']] });
+
+    // Render to a Pug template
+    res.render("admin-coupons", { coupons, token });
+
+  } catch (error) {
+    console.error("Error fetching coupons:", error);
+    res.status(500).send("An error occurred while loading coupon data.");
   }
 });
 

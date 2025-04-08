@@ -51,7 +51,7 @@ html
       if message
         .message= message
 
-      form(method="POST", action="/admin/coupons/attach")
+      form(method="POST", action="/gym/api/admin/coupons/attach")
         label(for="gym_id") Select Gym:
         select(name="gym_id", required)
           option(value="") -- Select Gym --

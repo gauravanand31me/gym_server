@@ -41,7 +41,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.NOW
         }
     }, {
-        tableName: 'coupons' // explicitly define the table name
+        tableName: 'coupons', // explicitly define the table name
+        timestamps: false, // ✅ Prevents Sequelize from adding createdAt/updatedAt
     });
 
     return Coupon;

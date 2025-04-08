@@ -134,7 +134,7 @@ router.get("/admin/coupons", requireAdmin, async (req, res) => {
     // Fetch all coupons
     const coupons = await Coupon.findAll({});
 
-    // Render to a Pug template
+  
     res.render("admin-coupons", { coupons, token });
 
   } catch (error) {

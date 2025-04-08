@@ -24,7 +24,7 @@ module.exports = {
       gym_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'gyms', // assumes a 'gyms' table already exists
+          model: 'Gyms', // assumes a 'gyms' table already exists
           key: 'id'
         },
         onDelete: 'SET NULL',

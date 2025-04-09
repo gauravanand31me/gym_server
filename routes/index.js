@@ -175,7 +175,7 @@ router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
 router.post("/admin/coupons/detach/:id", requireAdmin, async (req, res) => {
   try {
     await CouponGymMap.destroy({ where: { id: req.params.id } });
-    res.redirect("/admin/coupons/attach");
+    res.redirect("/gym/api/admin/coupons/attach");
   } catch (err) {
     console.error("Detach error:", err);
     res.status(500).send("Failed to detach coupon.");
@@ -198,7 +198,17 @@ router.post("/admin/coupons/attach", requireAdmin, async (req, res) => {
     const coupons = await Coupon.findAll();
     const message = existing ? "Already attached!" : "Coupon successfully attached to gym!";
 
-    res.render("admin-attach-coupon", { gyms, coupons, token: req.token, message });
+    const gym_id = req.query.gym_id;
+
+    // Fetch all mappings with joined data
+    const mappings = await CouponGymMap.findAll({
+      include: [
+        { model: Coupon, attributes: ['coupon_code'] },
+        { model: Gym, attributes: ['name', 'gym_unique_id'] }
+      ]
+    });
+
+    res.render("admin-attach-coupon", { gyms, coupons, token: req.token, message, gym_id,  mappings });
   } catch (error) {
     console.error("Error attaching coupon:", error);
     res.status(500).send("Failed to attach coupon.");

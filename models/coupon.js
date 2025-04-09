@@ -45,5 +45,15 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false, // ✅ Prevents Sequelize from adding createdAt/updatedAt
     });
 
+    Coupon.associate = models => {
+        Coupon.belongsToMany(models.Gym, {
+          through: models.CouponGymMap,
+          foreignKey: 'coupon_id'
+        });
+        Coupon.hasMany(models.CouponGymMap, {
+          foreignKey: 'coupon_id'
+        });
+    };
+
     return Coupon;
 };

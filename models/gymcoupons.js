@@ -39,6 +39,16 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'coupon_gyms',
       timestamps: false // disable default camelCase timestamps
     });
+
+
+    CouponGymMap.associate = models => {
+        CouponGymMap.belongsTo(models.Coupon, {
+          foreignKey: 'coupon_id'
+        });
+        CouponGymMap.belongsTo(models.Gym, {
+          foreignKey: 'gym_id'
+        });
+    };
   
     return CouponGymMap;
   };

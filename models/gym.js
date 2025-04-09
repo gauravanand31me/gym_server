@@ -89,6 +89,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "gymId",
       onDelete: "CASCADE",
     });
+    Gym.belongsToMany(models.Coupon, {
+      through: models.CouponGymMap,
+      foreignKey: 'gym_id'
+    });
+    Gym.hasMany(models.CouponGymMap, {
+      foreignKey: 'gym_id'
+    });
   };
 
   return Gym;

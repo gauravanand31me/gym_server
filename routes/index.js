@@ -198,7 +198,7 @@ router.post("/admin/coupons/attach", requireAdmin, async (req, res) => {
     const coupons = await Coupon.findAll();
     const message = existing ? "Already attached!" : "Coupon successfully attached to gym!";
 
-    const gym_id = req.query.gym_id;
+  
 
     // Fetch all mappings with joined data
     const mappings = await CouponGymMap.findAll({

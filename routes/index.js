@@ -154,8 +154,9 @@ router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
 
     const gyms = await adminDashboard();       // List of gyms
     const coupons = await Coupon.findAll();    // List of coupons
+    const gym_id = req.query.gym_id;
 
-    res.render("admin-attach-coupon", { gyms, coupons, token, message: null });
+    res.render("admin-attach-coupon", { gyms, coupons, token, message: null, gym_id});
   } catch (error) {
     console.error("Error loading attach form:", error);
     res.status(500).send("Error loading form.");

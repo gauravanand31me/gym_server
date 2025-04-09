@@ -55,8 +55,11 @@ html
         label(for="gym_id") Select Gym:
         select(name="gym_id", required)
           option(value="") -- Select Gym --
-          each gym in gyms
-            option(value=gym.id)= gym.name + ' (' + gym.gym_unique_id + ')'
+           each gym in gyms
+            option(
+            value=gym.id, 
+            selected=(gym.id.toString() === gym_id ? true : undefined)
+            )= gym.name + ' (' + gym.gym_unique_id + ')'
 
         label(for="coupon_id") Select Coupon:
         select(name="coupon_id", required)

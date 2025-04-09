@@ -19,9 +19,9 @@ html
       }
       .search-bar {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 20px;
-        gap: 10px;
       }
       .search-bar input {
         width: 100%;
@@ -30,6 +30,39 @@ html
         border: 1px solid #ddd;
         border-radius: 4px;
         font-size: 16px;
+      }
+      .add-coupon-form {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .add-coupon-form h2 {
+        margin-bottom: 15px;
+      }
+      .add-coupon-form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .add-coupon-form input, .add-coupon-form select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      .add-coupon-form button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .add-coupon-form button:hover {
+        background-color: #45a049;
       }
       table {
         width: 100%;
@@ -51,9 +84,18 @@ html
         color: #888;
         margin-top: 20px;
       }
+      .message {
+        color: green;
+        text-align: center;
+        margin: 20px 0;
+      }
+
   body
     .container
       h1 Admin Coupons
+
+      if message
+        .message= message
 
       .search-bar
         input#searchInput(type="text", placeholder="Search coupon code...")
@@ -79,6 +121,34 @@ html
                 td #{coupon.is_active ? 'Yes' : 'No'}
       else
         p.no-results#noResultsMessage No coupons available
+
+      .add-coupon-form
+        h2 Add New Coupon
+        form(method="POST", action="/admin/coupons/add")
+          label(for="coupon_code") Coupon Code:
+          input(type="text", name="coupon_code", required)
+
+          label(for="discount_amount") Discount Amount:
+          input(type="number", name="discount_amount", step="0.01", required)
+
+          label(for="discount_type") Discount Type:
+          select(name="discount_type", required)
+            option(value="") -- Select Type --
+            option(value="cash") Cash
+            option(value="percent") Percent
+
+          label(for="valid_from") Valid From:
+          input(type="date", name="valid_from")
+
+          label(for="valid_to") Valid To:
+          input(type="date", name="valid_to")
+
+          label(for="is_active") Active:
+          select(name="is_active", required)
+            option(value="true") Yes
+            option(value="false") No
+
+          button(type="submit") Add Coupon
 
     script.
       document.addEventListener("DOMContentLoaded", function () {

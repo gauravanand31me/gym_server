@@ -183,6 +183,35 @@ router.post("/admin/coupons/detach/:id", requireAdmin, async (req, res) => {
 });
 
 
+router.post("/admin/coupons/add", requireAdmin, async (req, res) => {
+  try {
+    const {
+      coupon_code,
+      discount_amount,
+      discount_type,
+      valid_from,
+      valid_to,
+      is_active
+    } = req.body;
+
+    await Coupon.create({
+      coupon_code,
+      discount_amount,
+      discount_type,
+      valid_from,
+      valid_to,
+      is_active: is_active === 'true'
+    });
+
+    const coupons = await Coupon.findAll({ order: [['created_at', 'DESC']] });
+    res.render("admin-coupons", { coupons, message: "Coupon added successfully!" });
+  } catch (err) {
+    console.error("Error adding coupon:", err);
+    res.status(500).send("Failed to add coupon.");
+  }
+});
+
+
 router.post("/admin/coupons/attach", requireAdmin, async (req, res) => {
   const { gym_id, coupon_id } = req.body;
 

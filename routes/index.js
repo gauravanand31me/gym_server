@@ -149,17 +149,36 @@ router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
   try {
     const email = process.env.GODADDY_EMAIL;
     const password = process.env.GODADDY_PASS;
-
     const token = jwt.sign({ email, password }, JWT_SECRET, { expiresIn: "1h" });
 
-    const gyms = await adminDashboard();       // List of gyms
-    const coupons = await Coupon.findAll();    // List of coupons
+    const gyms = await adminDashboard();
+    const coupons = await Coupon.findAll();
     const gym_id = req.query.gym_id;
 
-    res.render("admin-attach-coupon", { gyms, coupons, token, message: null, gym_id});
+    // Fetch all mappings with joined data
+    const mappings = await CouponGymMap.findAll({
+      include: [
+        { model: Coupon, attributes: ['coupon_code'] },
+        { model: Gym, attributes: ['name', 'gym_unique_id'] }
+      ]
+    });
+
+    res.render("admin-attach-coupon", { gyms, coupons, token, message: null, gym_id, mappings });
   } catch (error) {
     console.error("Error loading attach form:", error);
     res.status(500).send("Error loading form.");
+  }
+});
+
+
+
+router.post("/admin/coupons/detach/:id", requireAdmin, async (req, res) => {
+  try {
+    await CouponGymMap.destroy({ where: { id: req.params.id } });
+    res.redirect("/admin/coupons/attach");
+  } catch (err) {
+    console.error("Detach error:", err);
+    res.status(500).send("Failed to detach coupon.");
   }
 });
 

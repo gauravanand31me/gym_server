@@ -30,6 +30,12 @@ const { adminDashboard } = require('../controller/adminController');
 const { informGymOwner } = require('../controller/informGymOwner');
 const { sendSMS } = require('../config/sendSMS');
 
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: process.env.AWS_REGION
+});
+
 
 
 router.post('/register', registerController.registerGym);
@@ -388,49 +394,50 @@ const verifyJWT = (req, res, next) => {
   });
 };
 
-// API to upload multiple images for a gym
 router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, res) => {
-  // Accept up to 10 images; adjust the limit as needed
   try {
     const { gymId } = req;
 
-    // Ensure gym exists
     const gym = await Gym.findByPk(gymId);
     if (!gym) return res.status(404).json({ error: 'Gym not found' });
 
-    // Get the image URLs from the uploaded files
-    const imageUrls = req.files.map(file => file.location); // Assuming `file.location` contains the URL of the uploaded image
+    const uploadedUrls = await Promise.all(req.files.map(async (file) => {
+      const webpBuffer = await sharp(file.buffer)
+        .resize({ width: 1000 }) // Optional: resize
+        .webp({ quality: 80 })
+        .toBuffer();
 
+      const key = `${gymId}/gym_${Date.now()}_${uuidv4()}.webp`;
 
+      await s3.upload({
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: key,
+        Body: webpBuffer,
+        ContentType: 'image/webp',
+        ACL: 'public-read'
+      }).promise();
+
+      return `https://${process.env.CLOUDFRONT_URL}/${key}`;
+    }));
 
     const existingImage = await GymImage.findOne({ where: { gymId } });
-
-    // If no images exist, increment gym.complete by 10
     if (!existingImage) {
       await Gym.increment('complete', { by: 10, where: { id: gymId } });
     }
 
-    // Save each image URL to the database
-    const imagePromises = imageUrls.map(async (url) => {
-      // Check if the image already exists for the gym
-      const existingImage = await GymImage.findOne({
-        where: { imageUrl: url, gymId },
-      });
-
-      if (!existingImage) {
-        // Create a new image entry if it doesn't exist
+    const imagePromises = uploadedUrls.map(async (url) => {
+      const alreadyExists = await GymImage.findOne({ where: { imageUrl: url, gymId } });
+      if (!alreadyExists) {
         return GymImage.create({ id: uuidv4(), imageUrl: url, gymId });
       }
-
-      // Return null or any value to indicate no action was taken
       return null;
     });
 
     await Promise.all(imagePromises);
 
-    res.status(201).json({ message: 'Images uploaded successfully', imageUrls });
+    res.status(201).json({ message: 'Images uploaded successfully', imageUrls: uploadedUrls });
   } catch (error) {
-    console.log('Error uploading images:', error);
+    console.error('Error uploading images:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

@@ -5,7 +5,6 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const sharp = require('sharp');
 const AWS = require('aws-sdk');
-const upload = require('../middleware/upload'); // multer.memoryStorage
 const { GymImage, Gym, Coupon, CouponGymMap } = require('../models'); // Adjust the path as needed
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();

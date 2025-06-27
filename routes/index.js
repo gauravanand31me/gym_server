@@ -416,7 +416,6 @@ router.post('/gym-images', verifyJWT, upload.array('images', 10), async (req, re
         Key: key,
         Body: webpBuffer,
         ContentType: 'image/webp',
-        ACL: 'public-read'
       }).promise();
 
       return `https://${process.env.CLOUDFRONT_URL}/${key}`;

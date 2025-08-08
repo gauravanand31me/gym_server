@@ -265,7 +265,7 @@ router.get("/admin/update-award", requireAdmin, async (req, res) => {
     }
 
     await sequelize.query(
-      `UPDATE "Feeds" SET "award" = :award WHERE "randomCode" = :code`,
+      `UPDATE "Feeds" SET "awards" = :award WHERE "randomCode" = :code`,
       { replacements: { award, code } }
     );
 

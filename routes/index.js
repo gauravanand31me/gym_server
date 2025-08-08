@@ -253,6 +253,30 @@ router.get("/admin/deactivate-price", requireAdmin, async (req, res) => {
   }
 });
 
+
+
+router.get("/admin/update-award", requireAdmin, async (req, res) => {
+  try {
+    const code = req.query.code?.trim();
+    const award = req.query.award?.trim();
+
+    if (!code) {
+      return res.status(400).send("Invalid code.");
+    }
+
+    await sequelize.query(
+      `UPDATE "Feeds" SET "award" = :award WHERE "randomCode" = :code`,
+      { replacements: { award, code } }
+    );
+
+    res.redirect("/gym/api/admin/challenge");
+  } catch (error) {
+    console.error("Error updating award:", error);
+    res.status(500).send("Server error.");
+  }
+});
+
+
 router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
   try {
     const email = process.env.GODADDY_EMAIL;

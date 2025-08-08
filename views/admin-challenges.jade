@@ -16,6 +16,7 @@ html
               th Price
               th Update Price
               th Deactivate
+              th Award
           tbody
             each challenge in challenges
               tr
@@ -35,6 +36,15 @@ html
                       button.btn.btn-danger(type="submit") Deactivate
                   else
                     span.text-muted Not Active
+                td
+                  if challenge.price > 0
+                    form(method="GET", action="/gym/api/admin/update-award")
+                      input(type="hidden", name="code", value=challenge.randomCode)
+                      .input-group
+                        input.form-control(type="text", name="award", value=challenge.award || '', placeholder="Enter Award")
+                        button.btn.btn-success(type="submit") Save
+                  else
+                    span.text-muted Not Applicable
       else
         p No challenges found.
 

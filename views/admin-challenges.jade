@@ -41,7 +41,7 @@ html
                     form(method="GET", action="/gym/api/admin/update-award")
                       input(type="hidden", name="code", value=challenge.randomCode)
                       .input-group
-                        input.form-control(type="text", name="award", value=challenge.award || '', placeholder="Enter Award")
+                        input.form-control(type="text", name="award", value=challenge.awards || '', placeholder="Enter Award")
                         button.btn.btn-success(type="submit") Save
                   else
                     span.text-muted Not Applicable

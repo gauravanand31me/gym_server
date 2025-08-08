@@ -22,7 +22,7 @@ html
                 td= challenge.title
                 td ₹#{challenge.price}
                 td
-                  form(method="GET", action="/admin/update-price")
+                  form(method="GET", action="/gym/api//admin/update-price")
                     input(type="hidden", name="code", value=challenge.randomCode)
                     .input-group
                       input.form-control(type="number", step="0.01", name="price", placeholder="New Price", required)

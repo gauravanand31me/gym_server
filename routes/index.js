@@ -216,7 +216,7 @@ router.get("/admin/update-price", requireAdmin, async (req, res) => {
     );
 
     // `result` will be metadata from the DB; check number of rows affected if needed
-    res.redirect("/admin/challenge");
+    res.redirect("/gym/api/admin/challenge");
 
   } catch (error) {
     console.error("Error updating price with raw query:", error);

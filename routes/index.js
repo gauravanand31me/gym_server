@@ -225,6 +225,34 @@ router.get("/admin/update-price", requireAdmin, async (req, res) => {
 });
 
 
+
+router.get("/admin/deactivate-price", requireAdmin, async (req, res) => {
+  try {
+    const code = req.query.code?.trim();
+
+    if (!code) {
+      return res.status(400).send("Invalid code.");
+    }
+
+    const [result] = await sequelize.query(
+      `
+        UPDATE "Feeds"
+        SET "price" = 0
+        WHERE "randomCode" = :code
+      `,
+      {
+        replacements: { code },
+      }
+    );
+
+    res.redirect("/gym/api/admin/challenge");
+
+  } catch (error) {
+    console.error("Error deactivating challenge:", error);
+    res.status(500).send("Server error.");
+  }
+});
+
 router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
   try {
     const email = process.env.GODADDY_EMAIL;

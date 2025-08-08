@@ -153,6 +153,78 @@ router.get("/admin/coupons", requireAdmin, async (req, res) => {
 });
 
 
+
+
+
+router.get("/admin/challenge", requireAdmin, async (req, res) => {
+  try {
+    const email = process.env.GODADDY_EMAIL;
+    const password = process.env.GODADDY_PASS;
+
+    if (!email || !password) {
+      return res.status(500).send("Required environment variables are not set.");
+    }
+
+    const token = jwt.sign(
+      { email, password },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // Raw SQL query to fetch all challenge feeds
+    const [challenges] = await sequelize.query(`
+      SELECT * FROM "Feeds"
+      WHERE "activityType" = 'challenge'
+      ORDER BY "createdAt" DESC
+    `);
+
+    // Fetch all coupons (still using ORM)
+
+
+    // Render the page with both datasets
+    res.render("admin-challenges", {
+      challenges,
+      token
+    });
+
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).send("An error occurred while loading data.");
+  }
+});
+
+
+
+router.get("/admin/update-price", requireAdmin, async (req, res) => {
+  try {
+    const code = req.query.code?.trim();
+    const price = parseFloat(req.query.price);
+
+    if (!code || isNaN(price)) {
+      return res.status(400).send("Invalid code or price.");
+    }
+
+    const [result] = await sequelize.query(
+      `
+        UPDATE "Feeds"
+        SET "price" = :price
+        WHERE "randomCode" = :code
+      `,
+      {
+        replacements: { price, code },
+      }
+    );
+
+    // `result` will be metadata from the DB; check number of rows affected if needed
+    res.redirect("/admin/challenge");
+
+  } catch (error) {
+    console.error("Error updating price with raw query:", error);
+    res.status(500).send("Server error.");
+  }
+});
+
+
 router.get("/admin/coupons/attach", requireAdmin, async (req, res) => {
   try {
     const email = process.env.GODADDY_EMAIL;

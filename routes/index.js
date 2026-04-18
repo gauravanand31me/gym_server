@@ -431,7 +431,8 @@ router.get("/admin/users/get", requireAdmin, async (req, res) => {
         SELECT 
             "Users".id AS "userId",
             "Users".full_name AS "userFullName",
-            "Users".mobile_number AS "userMobileNumber"
+            "Users".mobile_number AS "userMobileNumber",
+            "Users".register_date AS "userRegisterDate"
         FROM "Users"
         ORDER BY "Users".full_name ASC;
     `;

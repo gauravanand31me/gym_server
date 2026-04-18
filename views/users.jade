@@ -83,12 +83,14 @@ html
             th #
             th Name
             th Mobile Number
+            th Register Date
         tbody
           each user, index in users
             tr
               td #{index + 1}
               td #{user.userFullName}
               td #{user.userMobileNumber}
+              td #{new Date(user.userRegisterDate).toLocaleDateString()}
 
       h2 Add a Number or Use Existing Users
       input#additionalNumber(type="text" placeholder="Enter a mobile number (optional)")
